@@ -168,6 +168,16 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
 
+# JWT
+# import datetime
+
+# JWT_AUTH = {
+#     'JWT_SECRET_KEY': SECRET_KEY,
+#     'JWT_ALGORITHM': 'HS256',
+#     'JWT_ALLOW_REFRESH': True,
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=2),
+#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7)
+# }
 
 # Redis
 SESSION_ENGINE = 'redis_sessions.session'
