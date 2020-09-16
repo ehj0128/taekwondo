@@ -96,14 +96,12 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'USER': 'ssafy',
+        'PASSWORD': 'welcomeback1!',
+        'HOST': 'j3b309.p.ssafy.io',
         'PORT': '3306'
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -182,6 +180,6 @@ ACCOUNT_LOGOUT_ON_GET = True
 # Redis
 SESSION_ENGINE = 'redis_sessions.session'
 
-SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
