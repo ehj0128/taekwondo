@@ -4,7 +4,7 @@
     <v-btn text>로고</v-btn>
     <v-btn text>태권도란</v-btn>
     <v-btn text>영상교육</v-btn>
-    <v-btn text>실습</v-btn>
+    <v-btn text @click="$router.push({name: 'Training'})">실습</v-btn>
     <v-btn text @click="$router.push({name: 'Login'})">로그인</v-btn>
     <v-spacer></v-spacer>
   </v-app-bar>

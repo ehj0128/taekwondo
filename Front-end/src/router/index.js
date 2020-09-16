@@ -4,6 +4,8 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/account/Login.vue"
 
+import Training from "../views/training/Training.vue"
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -25,6 +27,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login
+  },
+  {
+    path: "/training",
+    name: "Training",
+    component: Training
   }
 ];
 

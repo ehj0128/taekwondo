@@ -15,7 +15,7 @@ import * as posenet from '@tensorflow-models/posenet'
 import * as ps from 'posenet-similarity'
 
 export default {
-  name: "HelloWorld",
+  name: "Training",
   data () {
     return {
       model: null,
