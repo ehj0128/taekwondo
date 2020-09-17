@@ -2,8 +2,7 @@
   <v-container>
     <h1>영상수업</h1>
     <iframe
-      width="270"
-      height="180"
+      width="240"
       src="https://www.youtube.com/embed/4WTADD73ddk"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -11,18 +10,7 @@
     ></iframe>
 
     <iframe
-      width="270"
-      height="180"
-      src="https://www.youtube.com/embed/4WTADD73ddk"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
-
-
-    <iframe
-      width="270"
-      height="180"
+      width="240"
       src="https://www.youtube.com/embed/4WTADD73ddk"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -31,8 +19,16 @@
 
 
     <iframe
-      width="270"
-      height="180"
+      width="240"
+      src="https://www.youtube.com/embed/4WTADD73ddk"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+
+
+    <iframe
+      width="240"
       src="https://www.youtube.com/embed/4WTADD73ddk"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
