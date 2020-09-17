@@ -1,14 +1,5 @@
 <template>
   <div>
-    <!-- 임시버튼   -->
-    <v-btn
-      :disabled="dialog"
-      class="white--text"
-      color="purple darken-2"
-      @click="dialog = true"
-    >
-      Start loading
-    </v-btn>
     <!-- 성공 메세지(dialog) -->
     <v-dialog
       v-model="dialog"
