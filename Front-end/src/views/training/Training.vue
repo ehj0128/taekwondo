@@ -33,14 +33,19 @@ export default {
     async loop() {
       //인자 timestamp
       this.webcam.update();
-      await this.predict();
-      window.requestAnimationFrame(this.loop);
+      if (this.idx < 3) {
+        await this.predict();
+        window.requestAnimationFrame(this.loop);
+      } else {
+        this.webcam.pause();
+      }
     },
     async predict() {
       const pose = await this.net.estimateSinglePose(this.webcam.canvas, {
         flipHorizontal: false
       });
       if (
+        this.idx < 3 &&
         ps.poseSimilarity(this.poseDataList[this.idx], pose, {
           strategy: "cosineDistance"
         }) <= 0.1
