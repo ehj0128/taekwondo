@@ -4,6 +4,10 @@
       <canvas id="canvas"></canvas>
     </div>
     <div id="label-container"></div>
+    <div
+      id="gauge"
+      v-bind:style="{width: `${gauge * 10}px`, height: '30px', backgroundColor: 'green'}"
+    ></div>
   </div>
 </template>
 
@@ -12,6 +16,8 @@ import * as tmPose from "@teachablemachine/pose";
 import "@tensorflow/tfjs-backend-webgl";
 import * as posenet from "@tensorflow-models/posenet";
 import * as ps from "posenet-similarity";
+
+const MAX_GAUGE = 33;
 
 export default {
   name: "Training",
@@ -26,7 +32,8 @@ export default {
       net: null,
       poseData: null,
       poseDataList: [],
-      idx: 0
+      idx: 0,
+      gauge: 0
     };
   },
   methods: {
@@ -44,16 +51,31 @@ export default {
       const pose = await this.net.estimateSinglePose(this.webcam.canvas, {
         flipHorizontal: false
       });
-      if (
-        this.idx < 3 &&
-        ps.poseSimilarity(this.poseDataList[this.idx], pose, {
-          strategy: "cosineDistance"
-        }) <= 0.1
-      ) {
-        console.log("통과");
-        this.idx++;
-        console.log(this.idx);
+      if (this.idx < 3) {
+        const similarity = ps.poseSimilarity(
+          this.poseDataList[this.idx],
+          pose,
+          {
+            strategy: "cosineDistance"
+          }
+        );
+
+        if (similarity <= 0.1) {
+          this.gauge++;
+          if (this.gauge >= MAX_GAUGE) {
+            console.log(`${this.idx + 1}단계 통과`);
+            this.idx++;
+            this.gauge = 0;
+          }
+        } else {
+          this.gauge--;
+          if (this.gauge < 0) {
+            this.gauge = 0;
+          }
+        }
+        console.log(this.gauge);
       }
+
       this.drawPose(pose);
     },
     drawPose(pose) {
