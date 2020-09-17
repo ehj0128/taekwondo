@@ -25,7 +25,7 @@ SECRET_KEY = 'f_qgrk9a*_wp(bv8^cuv)r6a3abq(#)4+s0hwsbd_k4^ilu30g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'j3b309.p.ssafy.io']
 
 
 # Application definition
@@ -99,7 +99,7 @@ DATABASES = {
         'USER': 'ssafy',
         'PASSWORD': 'welcomeback1!',
         'HOST': 'j3b309.p.ssafy.io',
-        'PORT': '3306'
+        'PORT': '3307'
     }
 }
 
@@ -140,6 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 AUTH_USER_MODEL = 'accounts.User'
 
