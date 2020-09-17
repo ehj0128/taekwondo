@@ -1,9 +1,45 @@
 <template>
   <div>
-    <div>
-    <canvas id='canvas'></canvas>
-    </div>
-    <div id='label-container'></div>
+    <v-row class="mx-auto my-10">
+      <v-col cols="1">
+      </v-col>
+      <v-col cols="5">
+          <!-- <canvas class="mx-auto" id='canvas'></canvas> -->
+          <v-img
+              class="white--text align-end mx-auto"
+              height="500px"
+              width="500px"
+              :src="`/pose${this.idx}.jpg`"
+          ></v-img>
+            <v-dialog
+              v-model="dialog"
+              hide-overlay
+              persistent
+              width="150"
+              height="150"
+              
+            >
+              <v-card
+                color="rgba(255, 255, 255, 0)"
+                dark
+                :elevation = "0"
+                class="text-center blue--text"
+              >
+                <h1>Perfect!</h1>
+              </v-card>
+            </v-dialog>
+      </v-col>
+      <v-col cols="5">
+          <v-img
+              class="white--text align-end mx-auto"
+              height="500px"
+              width="500px"
+              :src="`/pose${this.idx}.jpg`"
+          ></v-img>
+      </v-col>
+      <v-col cols="1">
+      </v-col>
+    </v-row>
   </div>
 
 </template>
@@ -21,14 +57,21 @@ export default {
       model: null,
       webcam: null,
       ctx: null,
-      labelContainer: null,
-      maxPredictions: null,
-      predictions: [],
       net: null,
       poseData: null,
       poseDataList: [],
       idx: 0,
+      camWidth: 500,
+      camHeight: 500,
+      //다이얼로그 데이터
+      dialog: false
     }
+  },
+  watch: {
+    dialog (val) {
+      if (!val) return
+      setTimeout(() => (this.dialog = false), 2000)
+    },
   },
   methods: {
     async loop() { //인자 timestamp
@@ -38,9 +81,10 @@ export default {
     },
     async predict() {
       const pose = await this.net.estimateSinglePose(this.webcam.canvas, { flipHorizontal: false })
-      if (ps.poseSimilarity(this.poseDataList[this.idx], pose, { strategy: 'cosineDistance' }) <= 0.1) {
-        console.log('통과')
+      const poseAccuracy = ps.poseSimilarity(this.poseDataList[this.idx], pose, { strategy: 'cosineDistance' }) 
+      if (poseAccuracy <= 0.1) {
         this.idx++
+        this.dialog = true
         console.log(this.idx)
       }
       this.drawPose(pose)
@@ -56,16 +100,16 @@ export default {
       },
     async init() {
       const image1 = new Image()
-      image1.src = './pose.jpg'
+      image1.src = './pose0.jpg'
       const image2 = new Image()
-      image2.src = './pose2.jpg'
+      image2.src = './pose1.jpg'
       const image3 = new Image()
-      image3.src = './pose3.jpg'
+      image3.src = './pose2.jpg'
 
       this.net = await posenet.load({
         architecture: 'ResNet50',
         outputStride: 32,
-        inputResolution: { width: 400, height: 400},
+        inputResolution: { width: this.camWidth, height: this.camHeight},
         quantBytes: 2
       })
 
@@ -78,14 +122,14 @@ export default {
       this.poseDataList.push(this.poseData)
 
       const flip = true
-      this.webcam = new tmPose.Webcam(400, 400, flip)
+      this.webcam = new tmPose.Webcam(this.camWidth, this.camHeight, flip)
       await this.webcam.setup()
       this.webcam.play()
       window.requestAnimationFrame(this.loop)// this.loop 일듯
 
       const canvas = document.getElementById('canvas')
-      canvas.width = 400
-      canvas.height = 400
+      canvas.width = this.camWidth
+      canvas.height = this.camHeight
       this.ctx = canvas.getContext('2d')
       }
     },
