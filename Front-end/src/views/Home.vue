@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <v-container style="width: 63rem;">
     <VideoClass/>
     <Practice />
-  </div>
+  </v-container>
 </template>
 
 <script>
