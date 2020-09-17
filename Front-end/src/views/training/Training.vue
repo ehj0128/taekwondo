@@ -1,41 +1,54 @@
 <template>
   <div>
+    <!-- 임시버튼   -->
+    <v-btn
+      :disabled="dialog"
+      class="white--text"
+      color="purple darken-2"
+      @click="dialog = true"
+    >
+      Start loading
+    </v-btn>
     <!-- 성공 메세지(dialog) -->
     <v-dialog
       v-model="dialog"
       hide-overlay
       persistent
-      width="150"
-      height="150"
-      
+      width="400"
+      height="400"
     >
       <v-card
-        color="rgba(255, 255, 255, 0)"
+        color="rgba(0, 0, 0, 0.0)"
         dark
         :elevation = "0"
-        class="text-center blue--text"
+        class="text-center blue--text text--accent-1"
       >
-        <h1>Perfect!</h1>
+        <h1 class="reaction">Perfect!</h1>
       </v-card>
     </v-dialog>
     <!-- 비교 화면 -->
-    <v-row class="mx-auto my-10">
+    <v-row class="mx-auto my-5">
       <v-col cols="1">
       </v-col>
       <v-col cols="5">
-          <!-- <canvas class="mx-auto" id='canvas'></canvas> -->
+        <div id="canvas-container">
+          <h2 class="mb-5">우측 사진의 동작을 따라해주세요</h2>
+          <canvas v-if="this.idx < 4" id="canvas"></canvas>
           <v-img
+              v-else
               class="white--text align-end mx-auto"
               height="500px"
               width="500px"
-              :src="`/pose${this.idx}.jpg`"
+              :src="`/umhongus.jpg`"
           ></v-img>
-          <div
+        </div>
+          <!-- <div
             id="gauge"
-            v-bind:style="{width: `${gauge * 10}px`, height: '30px', backgroundColor: 'green'}"
-          ></div>
+            v-bind:style="{width: `${gauge * 166}px`, height: '30px', backgroundColor: 'green'}"
+          ></div> -->
       </v-col>
-      <v-col cols="5">
+      <v-col class="text-center" cols="5">
+          <h2 class="mb-5">예시 사진</h2>
           <v-img
               class="white--text align-end mx-auto"
               height="500px"
@@ -55,7 +68,7 @@ import "@tensorflow/tfjs-backend-webgl";
 import * as posenet from "@tensorflow-models/posenet";
 import * as ps from "posenet-similarity";
 
-const MAX_GAUGE = 33;
+const MAX_GAUGE = 2;
 
 export default {
   name: "Training",
@@ -86,7 +99,7 @@ export default {
     async loop() {
       //인자 timestamp
       this.webcam.update();
-      if (this.idx < 3) {
+      if (this.idx < 5) {
         await this.predict();
         window.requestAnimationFrame(this.loop);
       } else {
@@ -95,26 +108,29 @@ export default {
     },
     async predict() {
       const pose = await this.net.estimateSinglePose(this.webcam.canvas, { flipHorizontal: false })
-      if (this.idx < 3) {
+
+      if (this.idx < 5) {
         const poseAccuracy = ps.poseSimilarity(this.poseDataList[this.idx], pose, { strategy: 'cosineDistance' }) 
-        if (poseAccuracy <= 0.1) {
+        // console.log(poseAccuracy)
+        if (poseAccuracy <= 0.4) {
           this.gauge++;
+          // console.log(this.gauge)
           if (this.gauge >= MAX_GAUGE) {
             console.log(`${this.idx + 1}단계 통과`)
             this.idx++
+            this.dialog = true
             this.gauge = 0
-          } else {
+          }
+        } else {
           this.gauge--;
           if (this.gauge < 0) {
             this.gauge = 0;
           }
-          console.log(this.gauge);
-          this.dialog = true
-          console.log(this.idx)
+          // console.log(this.gauge);
+          // console.log(this.idx)
           }
         }
       this.drawPose(pose);
-      }
     },
     drawPose(pose) {
       this.ctx.drawImage(this.webcam.canvas, 0, 0);
@@ -132,6 +148,8 @@ export default {
       image2.src = './pose1.jpg'
       const image3 = new Image()
       image3.src = './pose2.jpg'
+      const image4 = new Image()
+      image4.src = './pose3.jpg'
 
       this.net = await posenet.load({
         architecture: "ResNet50",
@@ -153,12 +171,17 @@ export default {
         flipHorizontal: false
       });
       this.poseDataList.push(this.poseData);
+      this.poseData = await this.net.estimateSinglePose(image4, {
+        flipHorizontal: false
+      });
+      this.poseDataList.push(this.poseData);
 
 
       const flip = true
       this.webcam = new tmPose.Webcam(this.camWidth, this.camHeight, flip)
       await this.webcam.setup()
       this.webcam.play()
+      console.log(this.webcam)
       window.requestAnimationFrame(this.loop)// this.loop 일듯
 
       const canvas = document.getElementById('canvas')
@@ -169,6 +192,22 @@ export default {
     },
   async mounted() {
     this.init();
+  },
+  destroyed() {
+    this.webcam.stop()
   }
 };
 </script>
+
+<style scoped>
+#canvas-container {
+   width: 100%;
+   text-align:center;
+}
+#canvas {
+  display: inline;
+}
+.reaction {
+  font-size: 6rem;
+}
+</style>
