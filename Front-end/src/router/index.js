@@ -6,6 +6,7 @@ import Login from "../views/account/Login.vue"
 import Signup from '../views/account/Signup.vue'
 
 import Training from "../views/training/Training.vue"
+import VideoList from "../views/video/VideoList.vue"
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,11 @@ const routes = [
     path: "/training",
     name: "Training",
     component: Training
+  },
+  {
+    path: "/videolist",
+    name: "VideoList",
+    component: VideoList
   }
 ];
 
