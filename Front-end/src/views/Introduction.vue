@@ -12,10 +12,10 @@
                 <v-card class="d-flex align-center" color="rgb(249, 249, 250)" flat height="50px" width="50px" @click="toggle; window=i;">
                   <v-scroll-y-transition>
                     <div v-if="active" class="flex-grow-1 text-center">
-                      <v-img height="50px" width="50px" :src="menu.img" alt></v-img>  
+                      <v-img height="50px" width="50px" :src="menu.imgPath" alt></v-img>  
                     </div>
                     <div v-else class="flex-grow-1 text-center">
-                        <v-img height="50px" width="50px" :src="menu.img" alt></v-img>  
+                        <v-img height="50px" width="50px" :src="menu.imgPath" alt></v-img>  
                     </div>
                   </v-scroll-y-transition>
                 </v-card>
@@ -66,19 +66,19 @@ export default {
       menus : [
         { 
           title: "소개",
-          img: "/class-img/img-class1.png"
+          imgPath: require("./../assets/class-img/img-class1.png")
         },
         { 
           title: "역사",
-          img: "/class-img/img-class2.png"
+          imgPath: require("./../assets/class-img/img-class1.png")
         },
         { 
           title: "기술 체계",
-          img: "/class-img/img-class3.png"
+          imgPath: require("./../assets/class-img/img-class1.png")
         },
         { 
           title: "용어 사전",
-          img: "/class-img/img-class4.png"
+          imgPath: require("./../assets/class-img/img-class1.png")
         },
       ],
       model: 0,
