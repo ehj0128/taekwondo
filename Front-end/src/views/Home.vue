@@ -1,8 +1,11 @@
 <template>
+<div>
+  <video loop="loop" autoplay playsinline muted preload="none" src="https://mediadistribution.espn.com/wp-content/themes/Divi-MD/assets/videos/media_distribution_trim.mp4" style="width:100%"></video>
   <v-container style="width: 63rem;">
     <VideoClass/>
     <Practice />
   </v-container>
+</div>
 </template>
 
 <script>
