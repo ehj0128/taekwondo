@@ -9,7 +9,7 @@
     >
       Start loading
     </v-btn> -->
-    <!-- 성공 메세지(dialog) -->
+    <!-- 성공 메세지(dialog) 나중에 그림으로 대체 -->
     <v-dialog
       v-model="dialog"
       hide-overlay
@@ -92,6 +92,8 @@ export default {
       //캠설정변경하면서 추가
       mobile: null,
       video: null,
+      //루프 멈추기
+      loopVar: null,
     }
   },
   watch: {
@@ -106,7 +108,7 @@ export default {
       // this.video.update();
       if (this.idx < 5) {
         await this.predict();
-        window.requestAnimationFrame(this.loop);
+        this.loopVar = window.requestAnimationFrame(this.loop);
       } else {
         this.video.pause();
       }
@@ -118,7 +120,6 @@ export default {
         console.log(poseAccuracy)
         if (poseAccuracy <= 0.3) {
           this.gauge++;
-          // console.log(this.gauge)
           if (this.gauge >= MAX_GAUGE) {
             // console.log(`${this.idx + 1}단계 통과`)
             this.idx++
@@ -130,13 +131,11 @@ export default {
           if (this.gauge < 0) {
             this.gauge = 0;
           }
-          // console.log(this.gauge);
-          // console.log(this.idx)
           }
         }
-      this.drawPose(pose);
+      // this.drawPose(pose);
     },
-    drawPose() {
+    // drawPose() {
       // this.ctx.drawImage(this.video, 0, 0);
       // draw the keypoints and skeleton
       // if (pose) { // drawPose(pose) 로 해줘야함
@@ -144,7 +143,7 @@ export default {
       //   tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
       //   tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
       // }
-    },
+    // },
     async setupCamera() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error(
@@ -174,9 +173,7 @@ export default {
     async loadVideo() {
       this.video = await this.setupCamera()
       this.video.play()
-      console.log(this.video)
-      window.requestAnimationFrame(this.loop)
-      return this.video
+      this.loop()
     },
     async init() {
       const image1 = new Image()
@@ -213,7 +210,7 @@ export default {
       });
       this.poseDataList.push(this.poseData);
 
-
+      // 기존 tmPose 활용 웹캠 // 
       // const flip = true
       // this.webcam = new tmPose.Webcam(this.camWidth, this.camHeight, flip)
       // await this.webcam.setup()
@@ -225,7 +222,7 @@ export default {
       // canvas.width = this.camWidth
       // canvas.height = this.camHeight
       // this.ctx = canvas.getContext('2d')
-      },
+    },
     isAndroid() {
       return /Android/i.test(navigator.userAgent)
     },
@@ -242,7 +239,11 @@ export default {
     this.loadVideo()
   },
   destroyed() {
-    this.video.stop()
+    console.log(this.loopVar,'loopVAr')
+    window.cancelAnimationFrame(this.loopVar)
+    console.log(this.loopVar,'after')
+    // console.log(this.video)
+    // this.video.srcObject = null
   }
 };
 </script>
