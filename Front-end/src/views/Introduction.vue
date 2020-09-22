@@ -2,26 +2,17 @@
   <div>
     <div>
       <v-item-group mandatory active-class="primary">
-          <v-row class="justify-center" style="background-color:rgb(249, 249, 250)">
-            <v-col
-              v-for="(menu, i) in menus"
-              :key="menu"
-              cols="1"
-              >
-              <v-item v-slot:default="{ toggle, active }">
-                <v-card class="d-flex align-center" color="rgb(249, 249, 250)" flat height="50px" width="50px" @click="toggle; window=i;">
-                  <v-scroll-y-transition>
-                    <div v-if="active" class="flex-grow-1 text-center">
-                      <v-img height="50px" width="50px" :src="menu.imgPath" alt></v-img>  
-                    </div>
-                    <div v-else class="flex-grow-1 text-center">
-                        <v-img height="50px" width="50px" :src="menu.imgPath" alt></v-img>  
-                    </div>
-                  </v-scroll-y-transition>
-                </v-card>
-              </v-item>
-              <div>{{ menu.title }}</div> 
-            </v-col>
+          <v-row class="justify-center" style="background-color:rgb(245, 245, 247, 0.7)">
+            <v-btn-toggle v-model="toggle_exclusive" mandatory>
+              <v-col class="text-center" v-for="(menu, i) in menus" :key="menu.title" style="background-color:rgb(245, 245, 247, 0.7)">
+                <v-btn active-class="no-active" text @click="window=i" style="outline:none">
+                  <v-img v-if="window==i" height="50px" width="50px" :src="menu.imgPath2"></v-img>
+                  <v-img v-else height="50px" width="50px" :src="menu.imgPath"></v-img>
+                </v-btn>
+                <div v-if="window==i" style="color:rgb(0, 112, 201)" class="text-caption">{{ menu.title }}</div>
+                <div v-else class="text-caption">{{ menu.title }}</div>
+              </v-col>
+            </v-btn-toggle>
           </v-row>
       </v-item-group>
     </div>    
@@ -66,29 +57,37 @@ export default {
       menus : [
         { 
           title: "소개",
-          imgPath: require("./../assets/class-img/img-class1.png")
+          imgPath: require("./../assets/class-img/img-class1.png"),
+          imgPath2: require("./../assets/class-img/img-class1-a.png")
         },
         { 
           title: "역사",
-          imgPath: require("./../assets/class-img/img-class1.png")
+          imgPath: require("./../assets/class-img/img-class2.png"),
+          imgPath2: require("./../assets/class-img/img-class2-a.png")
         },
         { 
           title: "기술 체계",
-          imgPath: require("./../assets/class-img/img-class1.png")
+          imgPath: require("./../assets/class-img/img-class3.png"),
+          imgPath2: require("./../assets/class-img/img-class3-a.png")
         },
         { 
           title: "용어 사전",
-          imgPath: require("./../assets/class-img/img-class1.png")
+          imgPath: require("./../assets/class-img/img-class4.png"),
+          imgPath2: require("./../assets/class-img/img-class4-a.png")
         },
       ],
       model: 0,
       length: 4,
       window: 0,
+      toggle_exclusive: undefined,
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
+.v-btn--active.no-active::before {                                                                             
+  background-color: transparent !important;
+}
 
 </style>
