@@ -98,11 +98,11 @@ DATABASES = {
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'ssafy',
+        'NAME': 'taekwondo',
+        'USER': 'root',
         'PASSWORD': 'welcomeback1!',
         'HOST': 'j3b309.p.ssafy.io',
-        'PORT': '3307',
+        'PORT': '3306',
         'OPTIONS': {
             'sql_mode': 'traditional',
             'init_command':'SET character_set_connection=utf8,collation_connection=utf8_unicode_ci',
@@ -184,11 +184,11 @@ REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Redis
-SESSION_ENGINE = 'redis_sessions.session'
+# SESSION_ENGINE = 'redis_sessions.session'
 
-SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
-SESSION_REDIS_PORT = 6379
-SESSION_REDIS_DB = 0
+# SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
+# SESSION_REDIS_PORT = 6379
+# SESSION_REDIS_DB = 0
 
 # CORS Allow
 CORS_ORIGIN_ALLOW_ALL = True
