@@ -1,5 +1,6 @@
 <template>
   <div>
+    <PoomsaeList @poomsaeChanged="changePoomsae" /> <!-- To do. Navbar 호버 했을시 내려오게끔    -->
     <!-- 임시버튼   -->
     <!-- <v-btn
       :disabled="dialog"
@@ -55,7 +56,7 @@
               class="white--text align-end mx-auto"
               height="500px"
               width="500px"
-              :src="`/pose${this.idx}.jpg`"
+              :src="`/${$store.state.poomsaeCurNo}jang/pose${this.idx}.jpg`"
           ></v-img>
       </v-col>
       <v-col cols="1">
@@ -65,15 +66,22 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 // import * as tmPose from "@teachablemachine/pose";
 import "@tensorflow/tfjs-backend-webgl";
 import * as posenet from "@tensorflow-models/posenet";
 import * as ps from "posenet-similarity";
 
+import PoomsaeList from "@/components/training/PoomsaeList.vue"
+
 const MAX_GAUGE = 1;
 
 export default {
   name: "Training",
+  components: {
+    PoomsaeList
+  },
   data() {
     return {
       model: null,
@@ -95,6 +103,9 @@ export default {
       //루프 멈추기
       loopVar: null,
     }
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
   },
   watch: {
     dialog (val) {
@@ -176,6 +187,12 @@ export default {
       this.loop()
     },
     async init() {
+      switch(this.poomsaeCurNo) {
+        case 1:
+          break;
+        default:
+          console.log('TBU')
+      }
       const image1 = new Image()
       image1.src = './pose0.jpg'
       const image2 = new Image()
@@ -244,7 +261,7 @@ export default {
     console.log(this.loopVar,'after')
     // console.log(this.video)
     // this.video.srcObject = null
-  }
+  },
 };
 </script>
 
