@@ -1,31 +1,26 @@
 <template>
   <div>
-    <PoomsaeList @poomsaeChanged="changePoomsae" /> <!-- To do. Navbar 호버 했을시 내려오게끔    -->
+    <PoomsaeList /> <!-- To do. Navbar 호버 했을시 내려오게끔    -->
     <!-- 임시버튼   -->
-    <!-- <v-btn
+    <v-btn
       :disabled="dialog"
       class="white--text"
       color="purple darken-2"
       @click="dialog = true"
     >
       Start loading
-    </v-btn> -->
+    </v-btn>
     <!-- 성공 메세지(dialog) 나중에 그림으로 대체 -->
     <v-dialog
       v-model="dialog"
       hide-overlay
       persistent
-      width="400"
-      height="400"
+      width="400px"
+      height="400px"
     >
-      <v-card
-        color="rgba(0, 0, 0, 0.0)"
-        dark
-        :elevation = "0"
-        class="text-center blue--text text--accent-1"
-      >
-        <h1 class="reaction">Perfect!</h1>
-      </v-card>
+    <!-- - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 -  -->
+      <lottie-player src="https://assets10.lottiefiles.com/datafiles/kbuj8xpg2U73q9B/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop autoplay></lottie-player>
+    <!-- - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 -  -->
     </v-dialog>
     <!-- 비교 화면 -->
     <v-row class="mx-auto my-5">
@@ -67,6 +62,7 @@
 
 <script>
 import { mapState } from "vuex";
+import "@lottiefiles/lottie-player";
 
 // import * as tmPose from "@teachablemachine/pose";
 import "@tensorflow/tfjs-backend-webgl";
@@ -75,7 +71,7 @@ import * as ps from "posenet-similarity";
 
 import PoomsaeList from "@/components/training/PoomsaeList.vue"
 
-const MAX_GAUGE = 1;
+const MAX_GAUGE = 2;
 
 export default {
   name: "Training",
@@ -126,13 +122,14 @@ export default {
     },
     async predict() {
       const pose = await this.net.estimateSinglePose(this.video, { flipHorizontal: false })
+      // console.log(pose)
       if (this.idx < 5) {
         const poseAccuracy = ps.poseSimilarity(this.poseDataList[this.idx], pose, { strategy: 'cosineDistance' }) 
         console.log(poseAccuracy)
-        if (poseAccuracy <= 0.3) {
+        if (poseAccuracy <= 0.2) {
           this.gauge++;
           if (this.gauge >= MAX_GAUGE) {
-            // console.log(`${this.idx + 1}단계 통과`)
+            console.log(`${this.idx + 1}단계 통과`)
             this.idx++
             this.dialog = true
             this.gauge = 0
@@ -146,10 +143,10 @@ export default {
         }
       // this.drawPose(pose);
     },
-    // drawPose() {
+    // drawPose(pose) {
       // this.ctx.drawImage(this.video, 0, 0);
       // draw the keypoints and skeleton
-      // if (pose) { // drawPose(pose) 로 해줘야함
+      // if (pose) { 
       //   const minPartConfidence = 0.5;
       //   tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
       //   tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
@@ -187,12 +184,12 @@ export default {
       this.loop()
     },
     async init() {
-      switch(this.poomsaeCurNo) {
-        case 1:
-          break;
-        default:
-          console.log('TBU')
-      }
+      // switch(this.poomsaeCurNo) {
+      //   case 1:
+      //     break;
+      //   default:
+      //     console.log('TBU')
+      // }
       const image1 = new Image()
       image1.src = './pose0.jpg'
       const image2 = new Image()
@@ -205,7 +202,7 @@ export default {
       this.net = await posenet.load({
         architecture: "ResNet50",
         outputStride: 32,
-        inputResolution: { width: this.camWidth, height: this.camHeight},
+        inputResolution: 250, // { width: this.camWidth, height: this.camHeight },
         quantBytes: 2
       });
 
@@ -256,11 +253,12 @@ export default {
     this.loadVideo()
   },
   destroyed() {
-    console.log(this.loopVar,'loopVAr')
+    console.log(this.video)
+    this.video.srcObject.getTracks().forEach(function(track) {
+      track.stop()
+    })
     window.cancelAnimationFrame(this.loopVar)
-    console.log(this.loopVar,'after')
-    // console.log(this.video)
-    // this.video.srcObject = null
+    this.video.srcObject = null
   },
 };
 </script>
@@ -272,6 +270,10 @@ export default {
 }
 #canvas {
   display: inline;
+}
+#video {
+  transform: rotateY(180deg);
+  -webkit-transform:rotateY(180deg);   /* Safari and Chrome */
 }
 .reaction {
   font-size: 6rem;
