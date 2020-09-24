@@ -51,8 +51,8 @@
         <v-window-item v-for="n in length" :key="n">
           <Intro v-show="Window == 0" />
           <History v-show="Window == 1" />
-          <Category v-show="Window == 2" />
-          <Technique v-show="Window == 3" />
+          <Technique v-show="Window == 2" />
+          <Category v-show="Window == 3" />
         </v-window-item>
       </v-window>
     </v-container>
