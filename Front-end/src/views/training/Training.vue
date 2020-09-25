@@ -1,37 +1,44 @@
 <template>
   <div>
-    <!-- 성공 메세지(dialog) -->
+    <PoomsaeList /> <!-- To do. Navbar 호버 했을시 내려오게끔    -->
+    <!-- 임시버튼   -->
+    <v-btn
+      :disabled="dialog"
+      class="white--text"
+      color="purple darken-2"
+      @click="dialog = true"
+    >
+      Start loading
+    </v-btn>
+    <!-- 성공 메세지(dialog) 나중에 그림으로 대체 -->
     <v-dialog
       v-model="dialog"
       hide-overlay
       persistent
-      width="400"
-      height="400"
+      width="400px"
+      height="400px"
     >
-      <v-card
-        color="rgba(0, 0, 0, 0.0)"
-        dark
-        :elevation = "0"
-        class="text-center blue--text text--accent-1"
-      >
-        <h1 class="reaction">Perfect!</h1>
-      </v-card>
+    <!-- - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 -  -->
+      <lottie-player src="https://assets10.lottiefiles.com/datafiles/kbuj8xpg2U73q9B/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop autoplay></lottie-player>
+    <!-- - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 - - 로띠 - 로띠 - 로띠 -  -->
     </v-dialog>
     <!-- 비교 화면 -->
     <v-row class="mx-auto my-5">
       <v-col cols="1">
       </v-col>
       <v-col cols="5">
-        <div id="canvas-container">
-          <h2 class="mb-5">우측 사진의 동작을 따라해주세요</h2>
-          <canvas v-if="this.idx < 4" id="canvas"></canvas>
-          <v-img
+        <h2 class="mb-5">우측 사진의 동작을 따라해주세요</h2>
+        <video v-if="this.idx < 4" id="video"></video>
+        <v-img
               v-else
               class="white--text align-end mx-auto"
               height="500px"
               width="500px"
               :src="`/umhongus.jpg`"
-          ></v-img>
+        ></v-img>
+        <div id="canvas-container">
+          <!-- <canvas v-if="this.idx < 4" id="canvas"></canvas> -->
+
         </div>
           <!-- <div
             id="gauge"
@@ -44,7 +51,7 @@
               class="white--text align-end mx-auto"
               height="500px"
               width="500px"
-              :src="`/pose${this.idx}.jpg`"
+              :src="`/${$store.state.poomsaeCurNo}jang/pose${this.idx}.jpg`"
           ></v-img>
       </v-col>
       <v-col cols="1">
@@ -54,15 +61,23 @@
 </template>
 
 <script>
-import * as tmPose from "@teachablemachine/pose";
+import { mapState } from "vuex";
+import "@lottiefiles/lottie-player";
+
+// import * as tmPose from "@teachablemachine/pose";
 import "@tensorflow/tfjs-backend-webgl";
 import * as posenet from "@tensorflow-models/posenet";
 import * as ps from "posenet-similarity";
+
+import PoomsaeList from "@/components/training/PoomsaeList.vue"
 
 const MAX_GAUGE = 2;
 
 export default {
   name: "Training",
+  components: {
+    PoomsaeList
+  },
   data() {
     return {
       model: null,
@@ -77,8 +92,16 @@ export default {
       //다이얼로그 데이터
       dialog: false,
       //게이지
-      gauge: 0
+      gauge: 0,
+      //캠설정변경하면서 추가
+      mobile: null,
+      video: null,
+      //루프 멈추기
+      loopVar: null,
     }
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
   },
   watch: {
     dialog (val) {
@@ -89,23 +112,22 @@ export default {
   methods: {
     async loop() {
       //인자 timestamp
-      this.webcam.update();
+      // this.video.update();
       if (this.idx < 5) {
         await this.predict();
-        window.requestAnimationFrame(this.loop);
+        this.loopVar = window.requestAnimationFrame(this.loop);
       } else {
-        this.webcam.pause();
+        this.video.pause();
       }
     },
     async predict() {
-      const pose = await this.net.estimateSinglePose(this.webcam.canvas, { flipHorizontal: false })
-
+      const pose = await this.net.estimateSinglePose(this.video, { flipHorizontal: false })
+      // console.log(pose)
       if (this.idx < 5) {
         const poseAccuracy = ps.poseSimilarity(this.poseDataList[this.idx], pose, { strategy: 'cosineDistance' }) 
-        // console.log(poseAccuracy)
-        if (poseAccuracy <= 0.4) {
+        console.log(poseAccuracy)
+        if (poseAccuracy <= 0.2) {
           this.gauge++;
-          // console.log(this.gauge)
           if (this.gauge >= MAX_GAUGE) {
             console.log(`${this.idx + 1}단계 통과`)
             this.idx++
@@ -117,22 +139,57 @@ export default {
           if (this.gauge < 0) {
             this.gauge = 0;
           }
-          // console.log(this.gauge);
-          // console.log(this.idx)
           }
         }
-      this.drawPose(pose);
+      // this.drawPose(pose);
     },
-    drawPose(pose) {
-      this.ctx.drawImage(this.webcam.canvas, 0, 0);
+    // drawPose(pose) {
+      // this.ctx.drawImage(this.video, 0, 0);
       // draw the keypoints and skeleton
-      if (pose) {
-        const minPartConfidence = 0.5;
-        tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
-        tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
+      // if (pose) { 
+      //   const minPartConfidence = 0.5;
+      //   tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
+      //   tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
+      // }
+    // },
+    async setupCamera() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "Browser API navigator.mediaDevices.getUserMedia not available"
+        )
       }
+      this.video = document.getElementById("video")
+      this.video.width = this.camWidth
+      this.video.height = this.camHeight
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: "user",
+          width: this.mobile ? undefined : this.camWidth,
+          height: this.mobile ? undefined : this.camHeight
+        }
+      })
+      this.video.srcObject = stream
+
+      return new Promise(resolve => {
+        this.video.onloadedmetadata = () => {
+          resolve(this.video)
+        }
+      })
+    },
+    async loadVideo() {
+      this.video = await this.setupCamera()
+      this.video.play()
+      this.loop()
     },
     async init() {
+      // switch(this.poomsaeCurNo) {
+      //   case 1:
+      //     break;
+      //   default:
+      //     console.log('TBU')
+      // }
       const image1 = new Image()
       image1.src = './pose0.jpg'
       const image2 = new Image()
@@ -145,7 +202,7 @@ export default {
       this.net = await posenet.load({
         architecture: "ResNet50",
         outputStride: 32,
-        inputResolution: { width: this.camWidth, height: this.camHeight},
+        inputResolution: 250, // { width: this.camWidth, height: this.camHeight },
         quantBytes: 2
       });
 
@@ -167,26 +224,42 @@ export default {
       });
       this.poseDataList.push(this.poseData);
 
+      // 기존 tmPose 활용 웹캠 // 
+      // const flip = true
+      // this.webcam = new tmPose.Webcam(this.camWidth, this.camHeight, flip)
+      // await this.webcam.setup()
+      // this.webcam.play()
+      // // console.log(this.webcam)
+      // window.requestAnimationFrame(this.loop)// this.loop 일듯
 
-      const flip = true
-      this.webcam = new tmPose.Webcam(this.camWidth, this.camHeight, flip)
-      await this.webcam.setup()
-      this.webcam.play()
-      console.log(this.webcam)
-      window.requestAnimationFrame(this.loop)// this.loop 일듯
-
-      const canvas = document.getElementById('canvas')
-      canvas.width = this.camWidth
-      canvas.height = this.camHeight
-      this.ctx = canvas.getContext('2d')
-      }
+      // const canvas = document.getElementById('canvas')
+      // canvas.width = this.camWidth
+      // canvas.height = this.camHeight
+      // this.ctx = canvas.getContext('2d')
+    },
+    isAndroid() {
+      return /Android/i.test(navigator.userAgent)
+    },
+    isiOS() {
+      return /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    },
+    isMobile() {
+      return this.isAndroid() || this.isiOS()
+    }
     },
   async mounted() {
     this.init();
+    this.mobile = this.isMobile();
+    this.loadVideo()
   },
   destroyed() {
-    this.webcam.stop()
-  }
+    console.log(this.video)
+    this.video.srcObject.getTracks().forEach(function(track) {
+      track.stop()
+    })
+    window.cancelAnimationFrame(this.loopVar)
+    this.video.srcObject = null
+  },
 };
 </script>
 
@@ -197,6 +270,10 @@ export default {
 }
 #canvas {
   display: inline;
+}
+#video {
+  transform: rotateY(180deg);
+  -webkit-transform:rotateY(180deg);   /* Safari and Chrome */
 }
 .reaction {
   font-size: 6rem;

@@ -25,7 +25,10 @@ SECRET_KEY = 'f_qgrk9a*_wp(bv8^cuv)r6a3abq(#)4+s0hwsbd_k4^ilu30g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'j3b309.p.ssafy.io']
+ALLOWED_HOSTS = [
+    '*', 
+    'j3b309.p.ssafy.io',
+]   
 
 
 # Application definition
@@ -95,12 +98,19 @@ DATABASES = {
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'ssafy',
+        'NAME': 'taekwondo',
+        'USER': 'root',
         'PASSWORD': 'welcomeback1!',
         'HOST': 'j3b309.p.ssafy.io',
-        'PORT': '3307'
-    }
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+            'init_command':'SET character_set_connection=utf8,collation_connection=utf8_unicode_ci',
+        }
+    },
+    'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+    },
 }
 
 # Password validation
@@ -140,7 +150,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -167,20 +183,12 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
 
-# JWT
-# import datetime
-
-# JWT_AUTH = {
-#     'JWT_SECRET_KEY': SECRET_KEY,
-#     'JWT_ALGORITHM': 'HS256',
-#     'JWT_ALLOW_REFRESH': True,
-#     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=2),
-#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7)
-# }
-
 # Redis
-SESSION_ENGINE = 'redis_sessions.session'
+# SESSION_ENGINE = 'redis_sessions.session'
 
-SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
-SESSION_REDIS_PORT = 6379
-SESSION_REDIS_DB = 0
+# SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
+# SESSION_REDIS_PORT = 6379
+# SESSION_REDIS_DB = 0
+
+# CORS Allow
+CORS_ORIGIN_ALLOW_ALL = True

@@ -4,9 +4,9 @@
       <v-row>
         <v-btn cols=1 text @click="$router.push({name: 'Home'})">로고</v-btn>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text>태권도란</v-btn>
+        <v-btn cols=1 text @click="$router.push({name: 'Introduction'})">태권도란</v-btn>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text>영상교육</v-btn>
+        <v-btn cols=1 text @click="$router.push({name: 'VideoList'})">영상교육</v-btn>
         <v-spacer></v-spacer>
         <v-btn cols=1 text @click="$router.push({name: 'Training'})">실습</v-btn>
         <v-spacer></v-spacer>
