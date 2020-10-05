@@ -18,7 +18,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn text color="deep-purple accent-4">
+      <v-btn text color="deep-purple accent-4" @click="tryTraining()">
         실습하기
       </v-btn>
     </v-card-actions>
@@ -26,10 +26,20 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "VideoItem",
   props: {
     video: Object
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
+  },
+  methods: {
+    tryTraining() {
+      this.$router.push({ name: "Training"})
+    }
   }
 };
 </script>

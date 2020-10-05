@@ -14,11 +14,11 @@
           <v-btn
             active-class="no-active"
             text
-            @click="now = i"
+            @click="$store.state.poomsaeCurNo = i;"
             style="outline:none"
           >
             <v-img
-              v-if="now == i"
+              v-if="$store.state.poomsaeCurNo == i"
               height="50px"
               width="50px"
               :src="clss.imgPath2"
@@ -31,7 +31,7 @@
             ></v-img>
           </v-btn>
           <div
-            v-if="now == i"
+            v-if="$store.state.poomsaeCurNo == i"
             style="color:rgb(0, 112, 201)"
             class="text-caption"
           >
@@ -45,7 +45,7 @@
     <v-container style="width: 63rem;" class="mt-2">
       <v-card class="mx-auto mb-10">
         <v-container class="mt-5">
-          <VideoItem :video="classList[now]" />
+          <VideoItem :video="classList[$store.state.poomsaeCurNo]" />
         </v-container>
       </v-card>
     </v-container>
@@ -54,11 +54,15 @@
 
 <script>
 import VideoItem from "../../components/video/VideoItem.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "VideoList",
   components: {
     VideoItem
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
   },
   data() {
     return {
