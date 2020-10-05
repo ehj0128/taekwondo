@@ -1,11 +1,19 @@
 <template>
-<div>
-  <video loop="loop" autoplay playsinline muted preload="none" src="https://mediadistribution.espn.com/wp-content/themes/Divi-MD/assets/videos/media_distribution_trim.mp4" style="width:100%"></video>
-  <v-container style="width: 63rem;">
-    <!-- <VideoClass/>
+  <div>
+    <video
+      loop="loop"
+      autoplay
+      playsinline
+      muted
+      preload="none"
+      src="../assets/video/taekwondo_intro.mp4"
+      style="width:100%"
+    ></video>
+    <v-container style="width: 63rem;">
+      <!-- <VideoClass/>
     <Practice /> -->
-  </v-container>
-</div>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -14,7 +22,7 @@
 // import VideoClass from "../components/Home/VideoClass"
 
 export default {
-  name: "Home",
+  name: "Home"
   // components: {
   //   Practice,
   //   VideoClass
