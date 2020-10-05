@@ -14,12 +14,12 @@
       allowfullscreen
     ></iframe>
 
-    <v-card-text>{{ video.description }}</v-card-text>
+    <v-card-text><h4>{{ video.description }}</h4></v-card-text>
 
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text color="deep-purple accent-4" @click="tryTraining()">
-        실습하기
+        <h3>실습하기</h3>
       </v-btn>
     </v-card-actions>
   </v-card>

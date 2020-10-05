@@ -80,7 +80,7 @@ export default {
           name: "태극 1장",
           imgPath: require("./../../assets/class-img/img-class2.png"),
           imgPath2: require("./../../assets/class-img/img-class2-a.png"),
-          videoUrl: "https://www.youtube.com/embed/nC9IO0r21G0",
+          videoUrl: "https://www.youtube.com/embed/4WTADD73ddk",
           description:
             "태극 1장은 팔괘의 건(乾)을 의미하며 건은 하늘과 양을 뜻한다. \
                         건이 만물의 근원이 되는 시초를 나타낸 것과 같이 태권도에 있어서도 맨 처음의 품새이다."
