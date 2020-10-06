@@ -193,7 +193,7 @@ export default {
     };
   },
   mounted(){
-    axios.get("https://j3b309.p.ssafy.io:8085/educations/poomsae/")
+    axios.get("https://j3b309.p.ssafy.io/api/educations/poomsae/")
       .then(res => {
         this.actions = res.data.data;
         console.log(this.actions);
