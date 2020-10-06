@@ -65,7 +65,7 @@
         </v-col>
         <!-- 예시 화면 -->
         <v-col class="text-center" cols="5">
-          <video width="500px" height="500px" muted style="object-fit: cover;">
+          <video ref="reference" width="500px" height="500px" muted style="object-fit: cover;">
             <source
               :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
               type="video/mp4"
