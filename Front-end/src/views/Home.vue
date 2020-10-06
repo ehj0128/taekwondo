@@ -12,7 +12,7 @@
     <div
       id="gotop"
       class="animate__animated animate__fadeInLeft"
-      style="position:absolute; left: 15vw; color: #f4f4f4; font-family: 'Noto Serif KR', serif; font-size: 3rem;"
+      style="position:absolute; top: 30vh; left: 15vw; color: #f4f4f4; font-family: 'Noto Serif KR', serif; font-size: 3rem;"
     >
       <p>태권도(跆拳道)</p>
       <p style="font-size: 2rem;">[명사]</p>
