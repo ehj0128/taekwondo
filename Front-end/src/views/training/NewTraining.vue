@@ -1,5 +1,43 @@
 <template>
   <div>
+    <v-dialog v-model="passFlag" persistent width="500">
+      <v-card>
+        <v-card-text class="text-center">
+          <span>Good Job!</span>
+          <div style="width: 200px; margin: 0 auto;">
+            <lottie-player
+              autoplay
+              mode="normal"
+              src="https://assets1.lottiefiles.com/datafiles/8UjWgBkqvEF5jNoFcXV4sdJ6PXpS6DwF7cK4tzpi/Check Mark Success/Check Mark Success Data.json"
+              style="width: 200px"
+            />
+          </div>
+          <span>{{ this.seconds }}초 뒤 다음 단계로 넘어갑니다.</span>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="endFlag" persistent width="500">
+      <v-card>
+        <v-card-text class="text-center">
+          <div style="width: 400px; margin: 0 auto;">
+            <lottie-player
+              autoplay
+              loop
+              mode="normal"
+              speed="1.5"
+              src="https://assets7.lottiefiles.com/packages/lf20_htEgHu.json"
+              style="width: 400px"
+            />
+            <div>
+              <span>Excellent!</span>
+            </div>
+            <v-btn depressed color="primary">go Next Step</v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <div v-if="isError" id="info">
       this browser does not support video capture, or this device does not have
       a camera
@@ -21,7 +59,17 @@
         <canvas ref="canvas" />
       </div>
       <div>
-        <img ref="image" src="/ex1.jpg" />
+        <video
+          width="600px"
+          height="600px"
+          muted
+          autoplay
+          controls
+          style="object-fit: cover;"
+        >
+          <source src="/1jang/[SHANA]video1.mp4" type="video/mp4" />
+        </video>
+        <img ref="image" src="/1jang/pose0.jpg" width="600px" height="600px" />
       </div>
     </div>
   </div>
@@ -40,104 +88,37 @@ export default {
       isLoading: true,
       isError: false,
 
-      videoWidth: 600,
-      videoHeight: 600,
+      stage: "1jang",
+      poseNo: 0,
+      seqNo: 0,
+      poseData: [],
+      seqData: [],
+      score: 0,
+      passFlag: false,
+      endFlag: false,
 
-      prePoseData: {
-        score: 0.9893847563687492,
-        keypoints: [
-          {
-            score: 0.9976716637611389,
-            part: "nose",
-            position: { x: 320.59912109375, y: 70.54020182291666 }
-          },
-          {
-            score: 0.9965251088142395,
-            part: "leftEye",
-            position: { x: 329.0542399088542, y: 63.0699462890625 }
-          },
-          {
-            score: 0.9957560896873474,
-            part: "rightEye",
-            position: { x: 311.13555908203125, y: 66.45992024739583 }
-          },
-          {
-            score: 0.9118151664733887,
-            part: "leftEar",
-            position: { x: 344.4140828450521, y: 68.4049072265625 }
-          },
-          {
-            score: 0.9527170658111572,
-            part: "rightEar",
-            position: { x: 298.79585774739587, y: 70.64479573567708 }
-          },
-          {
-            score: 0.9987209439277649,
-            part: "leftShoulder",
-            position: { x: 361.8331298828125, y: 123.860595703125 }
-          },
-          {
-            score: 0.9997641444206238,
-            part: "rightShoulder",
-            position: { x: 284.59641520182294, y: 118.22543334960938 }
-          },
-          {
-            score: 0.9986870884895325,
-            part: "leftElbow",
-            position: { x: 403.7472330729167, y: 123.0157470703125 }
-          },
-          {
-            score: 0.9941114783287048,
-            part: "rightElbow",
-            position: { x: 226.4210205078125, y: 126.80727132161456 }
-          },
-          {
-            score: 0.994631290435791,
-            part: "leftWrist",
-            position: { x: 462.17305501302087, y: 118.08270263671875 }
-          },
-          {
-            score: 0.9935768842697144,
-            part: "rightWrist",
-            position: { x: 171.533935546875, y: 131.80354817708331 }
-          },
-          {
-            score: 0.9941556453704834,
-            part: "leftHip",
-            position: { x: 353.61521402994794, y: 245.44219970703125 }
-          },
-          {
-            score: 0.9989436268806458,
-            part: "rightHip",
-            position: { x: 294.44384765625, y: 246.06221516927081 }
-          },
-          {
-            score: 0.9977378845214844,
-            part: "leftKnee",
-            position: { x: 362.977294921875, y: 345.1719563802083 }
-          },
-          {
-            score: 0.9995817542076111,
-            part: "rightKnee",
-            position: { x: 289.6876627604167, y: 343.4333089192708 }
-          },
-          {
-            score: 0.9958552718162537,
-            part: "leftAnkle",
-            position: { x: 382.9208984375, y: 438.753173828125 }
-          },
-          {
-            score: 0.9992897510528564,
-            part: "rightAnkle",
-            position: { x: 264.25567626953125, y: 448.2675374348958 }
-          }
-        ]
-      }
+      seconds: 0,
+
+      correctSound: null,
+      clearSound: null,
+
+      videoWidth: 600,
+      videoHeight: 600
     };
   },
   async mounted() {
+    this.correctSound = new Audio("./correct.mp3");
+    this.clearSound = new Audio("./clear.mp3");
+
+    const response = await Promise.all([
+      fetch(`./1jang/pose.json`),
+      fetch(`./1jang/sequence.json`)
+    ]);
+    this.poseData = await response[0].json();
+    this.seqData = await response[1].json();
+
     this.worker = new Worker("./worker.js");
-    this.worker.onmessage = event => {
+    this.worker.onmessage = async event => {
       switch (event.data.command) {
         case "loadPosenet":
           const canvas = this.$refs.canvas;
@@ -178,23 +159,92 @@ export default {
           });
           break;
         case "drawFrame":
-          const similarity = ps.poseSimilarity(
-            this.prePoseData,
-            event.data.pose,
-            { strategy: "cosineDistance" }
-          );
+          if (this.seqData[this.seqNo].check.length) {
+            const checkpoint = this.seqData[this.seqNo].check[0];
 
-          similarity < 0.2 && console.log(similarity);
-
-          createImageBitmap(this.video).then(imageBitmap => {
-            this.worker.postMessage(
-              {
-                command: "drawFrame",
-                imageBitmap
-              },
-              [imageBitmap]
+            const similarity = ps.poseSimilarity(
+              this.poseData[checkpoint],
+              event.data.pose,
+              { strategy: "cosineDistance" }
             );
-          });
+
+            if (similarity < 0.2) {
+              console.log("중간단계 통과");
+              this.seqData[this.seqNo].check.shift();
+            }
+
+            createImageBitmap(this.video).then(imageBitmap => {
+              this.worker.postMessage(
+                {
+                  command: "drawFrame",
+                  imageBitmap
+                },
+                [imageBitmap]
+              );
+            });
+          } else {
+            const endpoint = this.seqData[this.seqNo].end;
+
+            const similarity = ps.poseSimilarity(
+              this.poseData[endpoint],
+              event.data.pose,
+              { strategy: "cosineDistance" }
+            );
+
+            if (similarity < 0.1) {
+              console.log(similarity);
+              this.score++;
+            }
+
+            if (this.score < 10) {
+              createImageBitmap(this.video).then(imageBitmap => {
+                this.worker.postMessage(
+                  {
+                    command: "drawFrame",
+                    imageBitmap
+                  },
+                  [imageBitmap]
+                );
+              });
+            } else {
+              this.passFlag = true;
+              this.correctSound.play();
+              this.seconds = 3;
+              const promise = new Promise(resolve => {
+                setTimeout(() => {
+                  this.seconds--;
+                }, 1000);
+                setTimeout(() => {
+                  this.seconds--;
+                }, 2000);
+                setTimeout(() => {
+                  resolve();
+                }, 3000);
+              });
+              await promise;
+              this.passFlag = false;
+              this.score = 0;
+              this.seqNo++;
+
+              if (this.seqNo === this.seqData.length) {
+                this.endFlag = true;
+                this.clearSound.play();
+              } else {
+                this.$refs.image.src = `/${this.stage}/pose${
+                  this.seqData[this.seqNo].end
+                }.jpg`;
+                createImageBitmap(this.video).then(imageBitmap => {
+                  this.worker.postMessage(
+                    {
+                      command: "drawFrame",
+                      imageBitmap
+                    },
+                    [imageBitmap]
+                  );
+                });
+              }
+            }
+          }
           break;
         default:
           break;
