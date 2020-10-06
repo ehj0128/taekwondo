@@ -4,7 +4,7 @@
       <!-- 로그인 -->
       <v-col cols="10" sm="8" md="6" lg="5">
         <v-form>
-          <div class="mt-10" style='font-size: 3rem; font-weight: bold'>로그인.</div>
+          <div class="mt-10" style='font-size: 3rem; font-weight: bold'>Tada! Easter Egg!</div>
           <v-text-field
             outlined
             label="ID"

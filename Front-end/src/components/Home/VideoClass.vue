@@ -38,7 +38,11 @@
 </template>
 
 <script>
-export default {};
+import axios from 'axios';
+
+export default {
+  name:"VideoClass",
+};
 </script>
 
 <style>
