@@ -60,16 +60,21 @@
       </div>
       <div>
         <video
+          ref="reference"
           width="600px"
           height="600px"
           muted
-          autoplay
-          controls
           style="object-fit: cover;"
         >
           <source src="/1jang/[SHANA]video1.mp4" type="video/mp4" />
         </video>
-        <img ref="image" src="/1jang/pose0.jpg" width="600px" height="600px" />
+        <img
+          ref="image"
+          src="/camera.png"
+          width="600px"
+          height="600px"
+          style="display: none;"
+        />
       </div>
     </div>
   </div>
@@ -79,6 +84,8 @@
 /* eslint-disable */
 import * as ps from "posenet-similarity";
 import "@lottiefiles/lottie-player";
+
+var iteration = 0;
 
 export default {
   data() {
@@ -96,6 +103,7 @@ export default {
       score: 0,
       passFlag: false,
       endFlag: false,
+      loopCount: 0,
 
       seconds: 0,
 
@@ -107,6 +115,26 @@ export default {
     };
   },
   async mounted() {
+    var self = this;
+    const reference = this.$refs.reference;
+    reference.addEventListener("ended", function() {
+      if (iteration < 2) {
+        iteration++;
+        this.play();
+      } else {
+        iteration = 0;
+        createImageBitmap(self.video).then(imageBitmap => {
+          self.worker.postMessage(
+            {
+              command: "drawFrame",
+              imageBitmap
+            },
+            [imageBitmap]
+          );
+        });
+      }
+    });
+
     this.correctSound = new Audio("./correct.mp3");
     this.clearSound = new Audio("./clear.mp3");
 
@@ -148,15 +176,16 @@ export default {
           break;
         case "initPosenet":
           this.isLoading = false;
-          createImageBitmap(this.video).then(imageBitmap => {
-            this.worker.postMessage(
-              {
-                command: "drawFrame",
-                imageBitmap
-              },
-              [imageBitmap]
-            );
-          });
+          this.$refs.reference.play();
+          // createImageBitmap(this.video).then(imageBitmap => {
+          //   this.worker.postMessage(
+          //     {
+          //       command: "drawFrame",
+          //       imageBitmap
+          //     },
+          //     [imageBitmap]
+          //   );
+          // });
           break;
         case "drawFrame":
           if (this.seqData[this.seqNo].check.length) {
