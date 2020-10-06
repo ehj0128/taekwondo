@@ -2,39 +2,55 @@
   <div>
     <PoomsaeList />
     <!-- 성공 메세지(dialog) -->
-    <v-dialog v-model="passFlag" persistent width="500">
+    <v-dialog v-model="passFlag" hide-overlay persistent width="500">
       <v-card>
-        <v-card-text class="text-center">
-          <span>Good Job!</span>
+        <v-card-text class="text-center py-5">
+          <h3>훌륭한 자세입니다!</h3>
           <div style="width: 200px; margin: 0 auto;">
             <lottie-player
               autoplay
+              loop
               mode="normal"
-              src="https://assets1.lottiefiles.com/datafiles/8UjWgBkqvEF5jNoFcXV4sdJ6PXpS6DwF7cK4tzpi/Check Mark Success/Check Mark Success Data.json"
+              src="https://assets3.lottiefiles.com/private_files/lf30_YQxjey.json"
               style="width: 200px"
             />
           </div>
-          <span>{{ this.seconds }}초 뒤 다음 단계로 넘어갑니다.</span>
+          <h2>{{ this.seconds }}초 뒤 다음 동작으로 넘어갑니다.</h2>
         </v-card-text>
       </v-card>
     </v-dialog>
     <!-- 품새 하나 끝났을 때 -->
     <v-dialog v-model="endFlag" persistent width="500">
       <v-card>
-        <v-card-text class="text-center">
+        <!-- 1장 ~ 8장 -->
+        <v-card-text v-if="$store.state.poomsaeCurNo<9" class="text-center py-5">
+          <h3>{{ $store.state.poomsaeCurNo }}장을 마스터했습니다!</h3>
           <div style="width: 400px; margin: 0 auto;">
             <lottie-player
               autoplay
               loop
               mode="normal"
-              speed="1.5"
-              src="https://assets7.lottiefiles.com/packages/lf20_htEgHu.json"
+              speed="1"
+              src="https://assets4.lottiefiles.com/packages/lf20_zmrlrM.json"
               style="width: 400px"
             />
-            <div>
-              <span>Excellent!</span>
-            </div>
-            <v-btn depressed color="primary">go Next Step</v-btn>
+            <h2>이제 {{ $store.state.poomsaeCurNo + 1}}장을 연습해보세요</h2>
+            <v-btn depressed color="primary" class="mt-5">더 강해지기</v-btn>
+          </div>
+        </v-card-text>
+        <!-- 마지막 장일 경우 -->
+        <v-card-text v-else class="text-center py-5">
+          <h3>고려까지 마스터했습니다!</h3>
+          <div style="width: 400px; margin: 0 auto;">
+            <lottie-player
+              autoplay
+              loop
+              mode="normal"
+              speed="1"
+              src="https://assets4.lottiefiles.com/packages/lf20_zmrlrM.json"
+              style="width: 400px"
+            />
+            <h2>당신은 이제 태권도 마스터입니다.</h2>
           </div>
         </v-card-text>
       </v-card>
@@ -64,11 +80,11 @@
         <!-- 실습 화면 -->
         <v-col cols="5">
           <video ref="video" playsinline style="display: none;" />
-          <canvas ref="canvas" style="width:100%"/>
+          <canvas ref="canvas" style="width:90%"/>
         </v-col>
         <!-- 예시 화면 -->
         <v-col class="text-center" cols="5">
-          <video ref="reference" muted style="width: 100%; object-fit: cover;">
+          <video ref="reference" muted style="width: 90%; object-fit: cover;">
             <source
               :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
               type="video/mp4"
@@ -118,7 +134,7 @@ export default {
       poseData: [],
       seqData: [],
       score: 0,
-      passFlag: false,
+      passFlag: true,
       endFlag: false,
       loopCount: 0,
 
