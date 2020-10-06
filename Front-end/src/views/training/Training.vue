@@ -108,11 +108,11 @@
 import * as ps from "posenet-similarity";
 import "@lottiefiles/lottie-player";
 
-var iteration = 0;
 
 import { mapState } from "vuex";
 import PoomsaeList from "@/components/training/PoomsaeList.vue";
 
+var iteration = 0;
 export default {
   name: "Training",
   components: {
@@ -127,14 +127,13 @@ export default {
       worker: null,
       isLoading: true,
       isError: false,
-
-      stage: "1jang",
+      // stage: "1jang",
       poseNo: 0,
       seqNo: 0,
       poseData: [],
       seqData: [],
       score: 0,
-      passFlag: true,
+      passFlag: false,
       endFlag: false,
       loopCount: 0,
 
@@ -295,7 +294,7 @@ export default {
                 this.endFlag = true;
                 this.clearSound.play();
               } else {
-                this.$refs.image.src = `/${this.stage}/pose${
+                this.$refs.image.src = `/${this.poomsaeCurNo}jang/pose${
                   this.seqData[this.seqNo].end
                 }.jpg`;
                 createImageBitmap(this.video).then(imageBitmap => {
