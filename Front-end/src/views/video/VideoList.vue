@@ -2,7 +2,7 @@
   <div style="width:100%;">
     <v-row
       class="justify-center"
-      style="background-color:rgb(245, 245, 247, 0.7)"
+      style="background-color:rgb(245, 245, 247, 0.7); overflow: auto;"
     >
       <v-btn-toggle v-model="toggle_exclusive" mandatory>
         <v-col
