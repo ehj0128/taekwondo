@@ -44,6 +44,7 @@
       this browser does not support video capture, or this device does not have
       a camera
     </div>
+    <!-- 로딩화면 -->
     <div v-if="isLoading" id="loading">
       <div ref="lottieWrapper" id="lottie-wrapper">
         <lottie-player
@@ -53,19 +54,21 @@
           src="https://assets10.lottiefiles.com/packages/lf20_0iwOkm.json"
           style="width: 200px"
         />
+        <h1>Loading...</h1>
       </div>
     </div>
+    <!-- 메인화면  -->
     <div v-show="!isLoading && !isError" id="main">
       <v-row class="mx-auto my-5">
         <v-col cols="1"></v-col>
         <!-- 실습 화면 -->
         <v-col cols="5">
           <video ref="video" playsinline style="display: none;" />
-          <canvas ref="canvas" />
+          <canvas ref="canvas" style="width:100%"/>
         </v-col>
         <!-- 예시 화면 -->
         <v-col class="text-center" cols="5">
-          <video ref="reference" width="500px" height="500px" muted style="object-fit: cover;">
+          <video ref="reference" muted style="width: 100%; object-fit: cover;">
             <source
               :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
               type="video/mp4"
@@ -128,6 +131,16 @@ export default {
       videoHeight: 500
     };
   },
+  watch: {
+    async poomsaeCurNo (poomsaeCurNo){
+    const response = await Promise.all([
+      fetch(`./1jang/pose.json`),
+      fetch(`./1jang/sequence.json`)
+    ]);
+    this.poseData = await response[0].json();
+    this.seqData = await response[1].json();
+    }
+  },
   async mounted() {
     var self = this;
     const reference = this.$refs.reference;
@@ -151,13 +164,6 @@ export default {
 
     this.correctSound = new Audio("./correct.mp3");
     this.clearSound = new Audio("./clear.mp3");
-
-    const response = await Promise.all([
-      fetch(`./1jang/pose.json`),
-      fetch(`./1jang/sequence.json`)
-    ]);
-    this.poseData = await response[0].json();
-    this.seqData = await response[1].json();
 
     this.worker = new Worker("./worker.js");
     this.worker.onmessage = async event => {
@@ -192,9 +198,9 @@ export default {
           this.isLoading = false;
           this.$refs.reference.play();
           // createImageBitmap(this.video).then(imageBitmap => {
-          //   this.worker.postMessage(
-          //     {
-          //       command: "drawFrame",
+            //   this.worker.postMessage(
+              //     {
+                //       command: "drawFrame",
           //       imageBitmap
           //     },
           //     [imageBitmap]
@@ -305,10 +311,17 @@ export default {
       this.isError = true;
       throw e;
     }
-
+    
     this.worker.postMessage({
       command: "loadPosenet"
     });
+
+    const response = await Promise.all([
+      fetch(`./1jang/pose.json`),
+      fetch(`./1jang/sequence.json`)
+    ]);
+    this.poseData = await response[0].json();
+    this.seqData = await response[1].json();
   },
   destroyed() {
     this.worker.terminate();
@@ -369,6 +382,10 @@ export default {
   position: relative;
   -webkit-animation: slideleft 5s forwards;
   animation: slideleft 5s forwards;
+}
+
+#loading {
+  margin-top: 15vh;
 }
 
 @-webkit-keyframes slideleft {
