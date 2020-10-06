@@ -8,7 +8,7 @@
     <iframe
       width="100%"
       height="500"
-      :src="video.videoUrl"
+      :src="video.url"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
@@ -31,7 +31,7 @@ import { mapState } from "vuex";
 export default {
   name: "VideoItem",
   props: {
-    video: Object
+    video: Object,
   },
   computed: {
     ...mapState(["poomsaeCurNo"])
