@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card flat class="mx-auto">
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="headline">{{ video.name }}</v-list-item-title>

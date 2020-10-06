@@ -42,19 +42,6 @@ import axios from 'axios';
 
 export default {
   name:"VideoClass",
-  data(){
-    return {
-      actions: ""
-    }
-  },
-  mounted(){
-    axios.get("http://j3b309.p.ssafy.io:8085/educations/poomsae/")
-      .then(res => {
-        this.actions = res;
-        console.log(this.actions);
-      })
-      .catch(err => console.log(err))
-  }
 };
 </script>
 
