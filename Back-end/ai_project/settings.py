@@ -26,9 +26,9 @@ SECRET_KEY = 'f_qgrk9a*_wp(bv8^cuv)r6a3abq(#)4+s0hwsbd_k4^ilu30g'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*', 
+    '*',
     'j3b309.p.ssafy.io',
-]   
+]
 
 
 # Application definition
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 
     # My apps
+    'educations',
     'accounts',
 ]
 
@@ -94,8 +95,8 @@ WSGI_APPLICATION = 'ai_project.wsgi.application'
 DATABASES = {
 
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'taekwondo',
@@ -105,7 +106,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'sql_mode': 'traditional',
-            'init_command':'SET character_set_connection=utf8,collation_connection=utf8_unicode_ci',
+            'init_command': 'SET character_set_connection=utf8,collation_connection=utf8_unicode_ci',
         }
     },
     'OPTIONS': {
@@ -165,7 +166,8 @@ SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -182,13 +184,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
-
-# Redis
-# SESSION_ENGINE = 'redis_sessions.session'
-
-# SESSION_REDIS_HOST = 'j3b309.p.ssafy.io'
-# SESSION_REDIS_PORT = 6379
-# SESSION_REDIS_DB = 0
 
 # CORS Allow
 CORS_ORIGIN_ALLOW_ALL = True
