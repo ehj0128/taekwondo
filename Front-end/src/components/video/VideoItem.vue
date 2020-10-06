@@ -14,22 +14,32 @@
       allowfullscreen
     ></iframe>
 
-    <v-card-text>{{ video.description }}</v-card-text>
+    <v-card-text><h4>{{ video.description }}</h4></v-card-text>
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn text color="deep-purple accent-4">
-        실습하기
+      <v-btn text color="deep-purple accent-4" @click="tryTraining()">
+        <h3>실습하기</h3>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "VideoItem",
   props: {
     video: Object
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
+  },
+  methods: {
+    tryTraining() {
+      this.$router.push({ name: "Training"})
+    }
   }
 };
 </script>

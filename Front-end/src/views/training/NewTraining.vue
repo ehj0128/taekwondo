@@ -1,5 +1,7 @@
 <template>
   <div>
+    <PoomsaeList />
+    <!-- 성공 메세지(dialog) -->
     <v-dialog v-model="passFlag" persistent width="500">
       <v-card>
         <v-card-text class="text-center">
@@ -16,7 +18,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-
+    <!-- 품새 하나 끝났을 때 -->
     <v-dialog v-model="endFlag" persistent width="500">
       <v-card>
         <v-card-text class="text-center">
@@ -54,28 +56,30 @@
       </div>
     </div>
     <div v-show="!isLoading && !isError" id="main">
-      <div>
-        <video ref="video" playsinline style="display: none;" />
-        <canvas ref="canvas" />
-      </div>
-      <div>
-        <video
-          ref="reference"
-          width="600px"
-          height="600px"
-          muted
-          style="object-fit: cover;"
-        >
-          <source src="/1jang/[SHANA]video1.mp4" type="video/mp4" />
-        </video>
-        <img
-          ref="image"
-          src="/camera.png"
-          width="600px"
-          height="600px"
-          style="display: none;"
-        />
-      </div>
+      <v-row class="mx-auto my-5">
+        <v-col cols="1"></v-col>
+        <!-- 실습 화면 -->
+        <v-col cols="5">
+          <video ref="video" playsinline style="display: none;" />
+          <canvas ref="canvas" />
+        </v-col>
+        <!-- 예시 화면 -->
+        <v-col class="text-center" cols="5">
+          <video width="500px" height="500px" muted style="object-fit: cover;">
+            <source
+              :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
+              type="video/mp4"
+            />
+          </video>
+          <img
+            ref="image"
+            src="/camera.png"
+            width="500px"
+            height="500px"
+            style="display: none;"
+          />
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -87,7 +91,17 @@ import "@lottiefiles/lottie-player";
 
 var iteration = 0;
 
+import { mapState } from "vuex";
+import PoomsaeList from "@/components/training/PoomsaeList.vue";
+
 export default {
+  name: "Training",
+  components: {
+    PoomsaeList
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
+  },
   data() {
     return {
       video: null,
@@ -110,8 +124,8 @@ export default {
       correctSound: null,
       clearSound: null,
 
-      videoWidth: 600,
-      videoHeight: 600
+      videoWidth: 500,
+      videoHeight: 500
     };
   },
   async mounted() {

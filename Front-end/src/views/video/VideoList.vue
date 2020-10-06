@@ -14,11 +14,11 @@
           <v-btn
             active-class="no-active"
             text
-            @click="now = i"
+            @click="$store.state.poomsaeCurNo = i;"
             style="outline:none"
           >
             <v-img
-              v-if="now == i"
+              v-if="$store.state.poomsaeCurNo == i"
               height="50px"
               width="50px"
               :src="clss.imgPath2"
@@ -31,7 +31,7 @@
             ></v-img>
           </v-btn>
           <div
-            v-if="now == i"
+            v-if="$store.state.poomsaeCurNo == i"
             style="color:rgb(0, 112, 201)"
             class="text-caption"
           >
@@ -45,7 +45,7 @@
     <v-container style="width: 63rem;" class="mt-2">
       <v-card class="mx-auto mb-10">
         <v-container class="mt-5">
-          <VideoItem :video="classList[now]" />
+          <VideoItem :video="classList[$store.state.poomsaeCurNo]" />
         </v-container>
       </v-card>
     </v-container>
@@ -54,11 +54,15 @@
 
 <script>
 import VideoItem from "../../components/video/VideoItem.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "VideoList",
   components: {
     VideoItem
+  },
+  computed: {
+    ...mapState(["poomsaeCurNo"])
   },
   data() {
     return {
@@ -76,7 +80,7 @@ export default {
           name: "태극 1장",
           imgPath: require("./../../assets/class-img/img-class2.png"),
           imgPath2: require("./../../assets/class-img/img-class2-a.png"),
-          videoUrl: "https://www.youtube.com/embed/nC9IO0r21G0",
+          videoUrl: "https://www.youtube.com/embed/4WTADD73ddk",
           description:
             "태극 1장은 팔괘의 건(乾)을 의미하며 건은 하늘과 양을 뜻한다. \
                         건이 만물의 근원이 되는 시초를 나타낸 것과 같이 태권도에 있어서도 맨 처음의 품새이다."
