@@ -74,10 +74,10 @@ import PoomsaeList from "@/components/training/PoomsaeList.vue"
 const MAX_GAUGE = 2;
 
 export default {
-  name: "Training",
-  components: {
-    PoomsaeList
-  },
+  // name: "Training",
+  // components: {
+  //   PoomsaeList
+  // },
   data() {
     return {
       model: null,
