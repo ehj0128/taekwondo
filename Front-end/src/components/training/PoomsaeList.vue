@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%;">
-    <v-row class="justify-center" style="background-color:rgb(245, 245, 247, 0.7)">
+    <v-row class="justify-center" style="background-color:rgb(245, 245, 247, 0.7); overflow: auto;">
       <v-btn-toggle v-model="toggle_exclusive" mandatory>
         <v-col class="text-center" v-for="(clss, i) in classList" :key="clss.name" style="background-color:rgb(245, 245, 247, 0.7)">
           <v-btn active-class="no-active" text @click="$store.state.poomsaeCurNo=i+1; $router.push({name: 'Training'}); console.log('뭐야');" style="outline:none">
