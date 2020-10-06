@@ -107,7 +107,7 @@ addEventListener("message", async (event) => {
       });
       break;
     case "initPosenet":
-      ctx.drawImage(event.data.imageBitmap, 0, 0, videoWidth, videoHeight);
+      // ctx.drawImage(event.data.imageBitmap, 0, 0, videoWidth, videoHeight);
       await net.estimateSinglePose(canvas);
       postMessage({
         command: event.data.command,
