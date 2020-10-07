@@ -1,6 +1,5 @@
 <template>
   <div>
-    <PoomsaeList />
     <!-- 성공 메세지(dialog) -->
     <v-dialog v-model="passFlag" hide-overlay persistent width="500">
       <v-card>
@@ -70,7 +69,7 @@
       a camera
     </div>
     <!-- 로딩화면 -->
-    <div v-if="isLoading" id="loading">
+    <div v-if="isLoading" id="loading" style="width: 80%; margin: 200px auto;">
       <div ref="lottieWrapper" id="lottie-wrapper">
         <lottie-player
           autoplay
@@ -79,11 +78,14 @@
           src="https://assets10.lottiefiles.com/packages/lf20_0iwOkm.json"
           style="width: 200px"
         />
-        <h1>Loading...</h1>
+      </div>
+      <div style="text-align: center">
+        <h1>{{ loadMsg }}</h1>
       </div>
     </div>
     <!-- 메인화면  -->
     <div v-show="!isLoading && !isError" id="main">
+      <PoomsaeList />
       <v-row class="mx-auto my-5">
         <v-col cols="1"></v-col>
         <!-- 실습 화면 -->
@@ -130,11 +132,16 @@ export default {
     ...mapState(["poomsaeCurNo"])
   },
   watch: {
-    async poomsaeCurNo() {
-      this.loadFlag = true;
-      this.seqNo = 0;
-      await this.loadPoseData();
-      this.$refs.reference.play();
+    async poomsaeCurNo(cur, old) {
+      if (cur >= 3) {
+        alert("준비 중 입니다.");
+        this.$store.state.poomsaeCurNo = old;
+      } else {
+        this.loadFlag = true;
+        this.seqNo = 0;
+        await this.loadPoseData();
+        this.$refs.reference.play();
+      }
     }
   },
   data() {
@@ -143,6 +150,8 @@ export default {
       worker: null,
       isLoading: true,
       isError: false,
+
+      loadMsg: "Now Loading",
 
       seqNo: 0,
       poseData: [],
@@ -162,6 +171,14 @@ export default {
     };
   },
   async mounted() {
+    const intervalId = setInterval(() => {
+      if (this.loadMsg.length == 14) {
+        this.loadMsg = "Now Loading";
+      } else {
+        this.loadMsg += ".";
+      }
+    }, 333);
+
     const self = this;
     const reference = this.$refs.reference;
     reference.addEventListener("ended", function() {
@@ -208,6 +225,7 @@ export default {
           });
           break;
         case "initPosenet":
+          clearInterval(intervalId);
           this.isLoading = false;
           this.drawFrame();
           this.$refs.reference.play();
@@ -289,6 +307,7 @@ export default {
     this.video.srcObject.getTracks().forEach(track => {
       track.stop();
     });
+    this.$store.state.poomsaeCurNo = 1;
   },
   methods: {
     async loadVideo() {
@@ -394,7 +413,7 @@ export default {
   }
 
   100% {
-    left: 1000px;
+    left: 100%;
   }
 }
 
@@ -404,7 +423,7 @@ export default {
   }
 
   100% {
-    left: 1000px;
+    left: 100%;
   }
 }
 

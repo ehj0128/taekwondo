@@ -14,7 +14,9 @@
       allowfullscreen
     ></iframe>
 
-    <v-card-text><h4>{{ video.description }}</h4></v-card-text>
+    <v-card-text
+      ><h4>{{ video.description }}</h4></v-card-text
+    >
 
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -32,13 +34,19 @@ export default {
   name: "VideoItem",
   props: {
     video: Object,
+    now: Number
   },
   computed: {
     ...mapState(["poomsaeCurNo"])
   },
   methods: {
     tryTraining() {
-      this.$router.push({ name: "Training"})
+      if (this.now >= 3) {
+        alert("해당 실습은 준비 중 입니다.");
+      } else {
+        this.$store.state.poomsaeCurNo = this.now;
+        this.$router.push({ name: "Training" });
+      }
     }
   }
 };
