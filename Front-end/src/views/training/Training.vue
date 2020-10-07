@@ -242,10 +242,6 @@ export default {
               }
 
               if (this.score >= 50) {
-                this.passFlag = true;
-                this.correctSound.play();
-                await this.waitThreeSeconds();
-                this.passFlag = false;
                 this.score = 0;
                 this.seqNo++;
 
@@ -254,6 +250,10 @@ export default {
                   this.clearSound.play();
                   break;
                 } else {
+                  this.passFlag = true;
+                  this.correctSound.play();
+                  await this.waitThreeSeconds();
+                  this.passFlag = false;
                   this.loadFlag = true;
                   this.$refs.reference.src = `/${this.poomsaeCurNo}jang/pose${this.seqNo}.mp4`;
                   this.$refs.reference.play();
