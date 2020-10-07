@@ -89,12 +89,24 @@
         <!-- 실습 화면 -->
         <v-col cols="5">
           <video ref="video" playsinline style="display: none;" />
+<<<<<<< HEAD
+          <canvas ref="canvas" style="width:90%; height: 73vh;"/>
+        </v-col>
+        <!-- 예시 화면 -->
+        <v-col class="text-center" cols="5">
+          <video ref="reference" muted style="width: 90%; height: 73vh; object-fit: cover;">
+            <source
+              :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
+              type="video/mp4"
+            />
+=======
           <canvas ref="canvas" style="width:90%" />
         </v-col>
         <!-- 예시 화면 -->
         <v-col class="text-center" cols="5">
           <video ref="reference" muted style="width: 90%; object-fit: cover;">
             <source type="video/mp4" />
+>>>>>>> c05ab42f81631786dc11b07cec2580677e42b85b
           </video>
           <img
             ref="image"
