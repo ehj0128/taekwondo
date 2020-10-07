@@ -120,10 +120,10 @@ import PoomsaeList from "@/components/training/PoomsaeList.vue";
 export default {
   name: "Training",
   components: {
-    PoomsaeList,
+    PoomsaeList
   },
   computed: {
-    ...mapState(["poomsaeCurNo"]),
+    ...mapState(["poomsaeCurNo"])
   },
   watch: {
     async poomsaeCurNo() {
@@ -131,7 +131,7 @@ export default {
       this.seqNo = 0;
       await this.loadPoseData();
       this.$refs.reference.play();
-    },
+    }
   },
   data() {
     return {
@@ -146,7 +146,7 @@ export default {
       score: 0,
       passFlag: false,
       endFlag: false,
-      loadFlag: false,
+      loadFlag: true,
       loopCount: 0,
       seconds: 0,
 
@@ -154,7 +154,7 @@ export default {
       clearSound: null,
 
       videoWidth: 500,
-      videoHeight: 500,
+      videoHeight: 500
     };
   },
   async mounted() {
@@ -175,7 +175,7 @@ export default {
     this.clearSound = new Audio("./clear.mp3");
 
     this.worker = new Worker("./worker.js");
-    this.worker.onmessage = async (event) => {
+    this.worker.onmessage = async event => {
       switch (event.data.command) {
         case "loadPosenet":
           const canvas = this.$refs.canvas;
@@ -186,18 +186,18 @@ export default {
           this.worker.postMessage(
             {
               command: "loadCanvas",
-              offscreen,
+              offscreen
             },
             [offscreen]
           );
           break;
         case "loadCanvas":
           const image = this.$refs.image;
-          createImageBitmap(image).then((imageBitmap) => {
+          createImageBitmap(image).then(imageBitmap => {
             this.worker.postMessage(
               {
                 command: "initPosenet",
-                imageBitmap,
+                imageBitmap
               },
               [imageBitmap]
             );
@@ -229,15 +229,15 @@ export default {
               const similarity = ps.poseSimilarity(
                 this.poseData[endpoint],
                 event.data.pose,
-                { strategy: "cosineDistance" }
+                { strategy: "weightedDistance" }
               );
 
-              if (similarity < 0.1) {
+              if (similarity < 0.05) {
                 console.log(similarity);
                 this.score++;
               }
 
-              if (this.score >= 10) {
+              if (this.score >= 20) {
                 this.passFlag = true;
                 this.correctSound.play();
                 await this.waitThreeSeconds();
@@ -277,12 +277,12 @@ export default {
     }
 
     this.worker.postMessage({
-      command: "loadPosenet",
+      command: "loadPosenet"
     });
   },
   destroyed() {
     this.worker.terminate();
-    this.video.srcObject.getTracks().forEach((track) => {
+    this.video.srcObject.getTracks().forEach(track => {
       track.stop();
     });
   },
@@ -305,8 +305,8 @@ export default {
         video: {
           facingMode: "user",
           width: mobile ? undefined : this.videoWidth,
-          height: mobile ? undefined : this.videoHeight,
-        },
+          height: mobile ? undefined : this.videoHeight
+        }
       });
 
       const video = this.$refs.video;
@@ -314,7 +314,7 @@ export default {
       video.height = this.videoHeight;
       video.srcObject = stream;
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         video.onloadedmetadata = () => {
           resolve(video);
         };
@@ -332,7 +332,7 @@ export default {
     async loadPoseData() {
       const response = await Promise.all([
         fetch(`./${this.poomsaeCurNo}jang/pose.json`),
-        fetch(`./${this.poomsaeCurNo}jang/sequence.json`),
+        fetch(`./${this.poomsaeCurNo}jang/sequence.json`)
       ]);
       this.poseData = await response[0].json();
       this.seqData = await response[1].json();
@@ -340,11 +340,11 @@ export default {
       this.$refs.reference.src = `/${this.poomsaeCurNo}jang/pose1.mp4`;
     },
     drawFrame() {
-      createImageBitmap(this.video).then((imageBitmap) => {
+      createImageBitmap(this.video).then(imageBitmap => {
         this.worker.postMessage(
           {
             command: "drawFrame",
-            imageBitmap,
+            imageBitmap
           },
           [imageBitmap]
         );
@@ -352,7 +352,7 @@ export default {
     },
     waitThreeSeconds() {
       this.seconds = 3;
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           this.seconds--;
         }, 1000);
@@ -367,8 +367,8 @@ export default {
     goNextStep() {
       this.$store.state.poomsaeCurNo += 1;
       this.endFlag = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
