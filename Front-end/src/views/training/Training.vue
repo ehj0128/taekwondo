@@ -23,7 +23,10 @@
     <v-dialog v-model="endFlag" persistent width="500">
       <v-card>
         <!-- 1장 ~ 8장 -->
-        <v-card-text v-if="$store.state.poomsaeCurNo<9" class="text-center py-5">
+        <v-card-text
+          v-if="$store.state.poomsaeCurNo < 9"
+          class="text-center py-5"
+        >
           <h3>{{ $store.state.poomsaeCurNo }}장을 마스터했습니다!</h3>
           <div style="width: 400px; margin: 0 auto;">
             <lottie-player
@@ -34,8 +37,14 @@
               src="https://assets4.lottiefiles.com/packages/lf20_zmrlrM.json"
               style="width: 400px"
             />
-            <h2>이제 {{ $store.state.poomsaeCurNo + 1}}장을 연습해보세요</h2>
-            <v-btn depressed color="primary" class="mt-5">더 강해지기</v-btn>
+            <h2>이제 {{ $store.state.poomsaeCurNo + 1 }}장을 연습해보세요</h2>
+            <v-btn
+              v-on:click="goNextStep"
+              depressed
+              color="primary"
+              class="mt-5"
+              >더 강해지기</v-btn
+            >
           </div>
         </v-card-text>
         <!-- 마지막 장일 경우 -->
@@ -80,6 +89,7 @@
         <!-- 실습 화면 -->
         <v-col cols="5">
           <video ref="video" playsinline style="display: none;" />
+<<<<<<< HEAD
           <canvas ref="canvas" style="width:90%; height: 73vh;"/>
         </v-col>
         <!-- 예시 화면 -->
@@ -89,6 +99,14 @@
               :src="`/${$store.state.poomsaeCurNo}jang/[SHANA]video1.mp4`"
               type="video/mp4"
             />
+=======
+          <canvas ref="canvas" style="width:90%" />
+        </v-col>
+        <!-- 예시 화면 -->
+        <v-col class="text-center" cols="5">
+          <video ref="reference" muted style="width: 90%; object-fit: cover;">
+            <source type="video/mp4" />
+>>>>>>> c05ab42f81631786dc11b07cec2580677e42b85b
           </video>
           <img
             ref="image"
@@ -108,18 +126,24 @@
 import * as ps from "posenet-similarity";
 import "@lottiefiles/lottie-player";
 
-
 import { mapState } from "vuex";
 import PoomsaeList from "@/components/training/PoomsaeList.vue";
 
-var iteration = 0;
 export default {
   name: "Training",
   components: {
-    PoomsaeList
+    PoomsaeList,
   },
   computed: {
-    ...mapState(["poomsaeCurNo"])
+    ...mapState(["poomsaeCurNo"]),
+  },
+  watch: {
+    async poomsaeCurNo() {
+      this.loadFlag = true;
+      this.seqNo = 0;
+      await this.loadPoseData();
+      this.$refs.reference.play();
+    },
   },
   data() {
     return {
@@ -127,61 +151,43 @@ export default {
       worker: null,
       isLoading: true,
       isError: false,
-      // stage: "1jang",
-      poseNo: 0,
+
       seqNo: 0,
       poseData: [],
       seqData: [],
       score: 0,
       passFlag: false,
-      endFlag: false,
+      endFlag: true,
+      loadFlag: true,
       loopCount: 0,
-
       seconds: 0,
 
       correctSound: null,
       clearSound: null,
 
       videoWidth: 500,
-      videoHeight: 500
+      videoHeight: 500,
     };
   },
-  watch: {
-    async poomsaeCurNo (poomsaeCurNo){
-    const response = await Promise.all([
-      fetch(`./1jang/pose.json`),
-      fetch(`./1jang/sequence.json`)
-    ]);
-    this.poseData = await response[0].json();
-    this.seqData = await response[1].json();
-    }
-  },
   async mounted() {
-    var self = this;
+    const self = this;
     const reference = this.$refs.reference;
     reference.addEventListener("ended", function() {
-      if (iteration < 2) {
-        iteration++;
+      if (self.loopCount < 2) {
+        self.loopCount++;
         this.play();
       } else {
-        iteration = 0;
-        createImageBitmap(self.video).then(imageBitmap => {
-          self.worker.postMessage(
-            {
-              command: "drawFrame",
-              imageBitmap
-            },
-            [imageBitmap]
-          );
-        });
+        self.loopCount = 0;
+        self.loadFlag = false;
       }
     });
+    await this.loadPoseData();
 
     this.correctSound = new Audio("./correct.mp3");
     this.clearSound = new Audio("./clear.mp3");
 
     this.worker = new Worker("./worker.js");
-    this.worker.onmessage = async event => {
+    this.worker.onmessage = async (event) => {
       switch (event.data.command) {
         case "loadPosenet":
           const canvas = this.$refs.canvas;
@@ -192,18 +198,18 @@ export default {
           this.worker.postMessage(
             {
               command: "loadCanvas",
-              offscreen
+              offscreen,
             },
             [offscreen]
           );
           break;
         case "loadCanvas":
           const image = this.$refs.image;
-          createImageBitmap(image).then(imageBitmap => {
+          createImageBitmap(image).then((imageBitmap) => {
             this.worker.postMessage(
               {
                 command: "initPosenet",
-                imageBitmap
+                imageBitmap,
               },
               [imageBitmap]
             );
@@ -211,104 +217,59 @@ export default {
           break;
         case "initPosenet":
           this.isLoading = false;
+          this.drawFrame();
           this.$refs.reference.play();
-          // createImageBitmap(this.video).then(imageBitmap => {
-            //   this.worker.postMessage(
-              //     {
-                //       command: "drawFrame",
-          //       imageBitmap
-          //     },
-          //     [imageBitmap]
-          //   );
-          // });
           break;
         case "drawFrame":
-          if (this.seqData[this.seqNo].check.length) {
-            const checkpoint = this.seqData[this.seqNo].check[0];
+          if (!this.loadFlag) {
+            if (this.seqData[this.seqNo].check.length) {
+              const checkpoint = this.seqData[this.seqNo].check[0];
 
-            const similarity = ps.poseSimilarity(
-              this.poseData[checkpoint],
-              event.data.pose,
-              { strategy: "cosineDistance" }
-            );
-
-            if (similarity < 0.2) {
-              console.log("중간단계 통과");
-              this.seqData[this.seqNo].check.shift();
-            }
-
-            createImageBitmap(this.video).then(imageBitmap => {
-              this.worker.postMessage(
-                {
-                  command: "drawFrame",
-                  imageBitmap
-                },
-                [imageBitmap]
+              const similarity = ps.poseSimilarity(
+                this.poseData[checkpoint],
+                event.data.pose,
+                { strategy: "cosineDistance" }
               );
-            });
-          } else {
-            const endpoint = this.seqData[this.seqNo].end;
 
-            const similarity = ps.poseSimilarity(
-              this.poseData[endpoint],
-              event.data.pose,
-              { strategy: "cosineDistance" }
-            );
-
-            if (similarity < 0.1) {
-              console.log(similarity);
-              this.score++;
-            }
-
-            if (this.score < 10) {
-              createImageBitmap(this.video).then(imageBitmap => {
-                this.worker.postMessage(
-                  {
-                    command: "drawFrame",
-                    imageBitmap
-                  },
-                  [imageBitmap]
-                );
-              });
+              if (similarity < 0.2) {
+                console.log("중간단계 통과");
+                this.seqData[this.seqNo].check.shift();
+              }
             } else {
-              this.passFlag = true;
-              this.correctSound.play();
-              this.seconds = 3;
-              const promise = new Promise(resolve => {
-                setTimeout(() => {
-                  this.seconds--;
-                }, 1000);
-                setTimeout(() => {
-                  this.seconds--;
-                }, 2000);
-                setTimeout(() => {
-                  resolve();
-                }, 3000);
-              });
-              await promise;
-              this.passFlag = false;
-              this.score = 0;
-              this.seqNo++;
+              const endpoint = this.seqData[this.seqNo].end;
 
-              if (this.seqNo === this.seqData.length) {
-                this.endFlag = true;
-                this.clearSound.play();
-              } else {
-                this.$refs.image.src = `/${this.poomsaeCurNo}jang/pose${
-                  this.seqData[this.seqNo].end
-                }.jpg`;
-                createImageBitmap(this.video).then(imageBitmap => {
-                  this.worker.postMessage(
-                    {
-                      command: "drawFrame",
-                      imageBitmap
-                    },
-                    [imageBitmap]
-                  );
-                });
+              const similarity = ps.poseSimilarity(
+                this.poseData[endpoint],
+                event.data.pose,
+                { strategy: "cosineDistance" }
+              );
+
+              if (similarity < 0.1) {
+                console.log(similarity);
+                this.score++;
+              }
+
+              if (this.score >= 10) {
+                this.passFlag = true;
+                this.correctSound.play();
+                await this.waitThreeSeconds();
+                this.passFlag = false;
+                this.score = 0;
+                this.seqNo++;
+
+                if (this.seqNo === this.seqData.length) {
+                  this.endFlag = true;
+                  this.clearSound.play();
+                  break;
+                } else {
+                  this.loadFlag = true;
+                  this.$refs.reference.src = `/${this.poomsaeCurNo}jang/[SHANA]video${this.seqNo}.mp4`;
+                  this.$refs.reference.play();
+                }
               }
             }
           }
+          this.drawFrame();
           break;
         default:
           break;
@@ -326,21 +287,14 @@ export default {
       this.isError = true;
       throw e;
     }
-    
-    this.worker.postMessage({
-      command: "loadPosenet"
-    });
 
-    const response = await Promise.all([
-      fetch(`./1jang/pose.json`),
-      fetch(`./1jang/sequence.json`)
-    ]);
-    this.poseData = await response[0].json();
-    this.seqData = await response[1].json();
+    this.worker.postMessage({
+      command: "loadPosenet",
+    });
   },
   destroyed() {
     this.worker.terminate();
-    this.video.srcObject.getTracks().forEach(track => {
+    this.video.srcObject.getTracks().forEach((track) => {
       track.stop();
     });
   },
@@ -363,8 +317,8 @@ export default {
         video: {
           facingMode: "user",
           width: mobile ? undefined : this.videoWidth,
-          height: mobile ? undefined : this.videoHeight
-        }
+          height: mobile ? undefined : this.videoHeight,
+        },
       });
 
       const video = this.$refs.video;
@@ -372,7 +326,7 @@ export default {
       video.height = this.videoHeight;
       video.srcObject = stream;
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         video.onloadedmetadata = () => {
           resolve(video);
         };
@@ -386,8 +340,47 @@ export default {
     },
     isMobile() {
       return this.isAndroid() || this.isiOS();
-    }
-  }
+    },
+    async loadPoseData() {
+      const response = await Promise.all([
+        fetch(`./${this.poomsaeCurNo}jang/pose.json`),
+        fetch(`./${this.poomsaeCurNo}jang/sequence.json`),
+      ]);
+      this.poseData = await response[0].json();
+      this.seqData = await response[1].json();
+
+      this.$refs.reference.src = `/${this.poomsaeCurNo}jang/[SHANA]video1.mp4`;
+    },
+    drawFrame() {
+      createImageBitmap(this.video).then((imageBitmap) => {
+        this.worker.postMessage(
+          {
+            command: "drawFrame",
+            imageBitmap,
+          },
+          [imageBitmap]
+        );
+      });
+    },
+    waitThreeSeconds() {
+      this.seconds = 3;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          this.seconds--;
+        }, 1000);
+        setTimeout(() => {
+          this.seconds--;
+        }, 2000);
+        setTimeout(() => {
+          resolve();
+        }, 3000);
+      });
+    },
+    goNextStep() {
+      this.$store.state.poomsaeCurNo += 1;
+      this.endFlag = false;
+    },
+  },
 };
 </script>
 
