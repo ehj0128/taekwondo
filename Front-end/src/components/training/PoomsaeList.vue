@@ -100,13 +100,7 @@ export default {
           name: "태극 8장",
           imgPath: require("./../../assets/class-img/img-class9.png"),
           imgPath2: require("./../../assets/class-img/img-class9-a.png"),
-        },
-        {
-          id: 9,
-          name: "고려",
-          imgPath: require("./../../assets/class-img/img-class10.png"),
-          imgPath2: require("./../../assets/class-img/img-class10-a.png"),
-        },
+        }, 
       ],
       toggle_exclusive: undefined,
     };
