@@ -21,9 +21,9 @@
     <!-- 품새 하나 끝났을 때 -->
     <v-dialog v-model="endFlag" persistent width="500">
       <v-card>
-        <!-- 1장 ~ 8장 -->
+        <!-- 1장 ~ 7장 -->
         <v-card-text
-          v-if="$store.state.poomsaeCurNo < 9"
+          v-if="$store.state.poomsaeCurNo < 8"
           class="text-center py-5"
         >
           <h3>{{ $store.state.poomsaeCurNo }}장을 마스터했습니다!</h3>
@@ -46,9 +46,9 @@
             >
           </div>
         </v-card-text>
-        <!-- 마지막 장일 경우 -->
+        <!-- 8장일 경우 -->
         <v-card-text v-else class="text-center py-5">
-          <h3>고려까지 마스터했습니다!</h3>
+          <h3>8장까지 마스터했습니다!</h3>
           <div style="width: 400px; margin: 0 auto;">
             <lottie-player
               autoplay

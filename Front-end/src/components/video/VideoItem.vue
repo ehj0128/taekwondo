@@ -42,7 +42,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text color="deep-purple accent-4" @click="tryTraining()">
-        <h3>실습하기</h3>
+        <h3 v-if="video.id > 1 && video.id < 10">실습하기</h3>
       </v-btn>
     </v-card-actions>
   </v-card>
