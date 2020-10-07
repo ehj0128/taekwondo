@@ -43,6 +43,8 @@ const color = "aqua";
 const boundingBoxColor = "red";
 const lineWidth = 2;
 
+let defalutImage;
+
 /**
  * Draw pose keypoints onto a canvas
  */
@@ -107,8 +109,15 @@ addEventListener("message", async (event) => {
       });
       break;
     case "initPosenet":
-      // ctx.drawImage(event.data.imageBitmap, 0, 0, videoWidth, videoHeight);
+      defalutImage = event.data.imageBitmap;
+      ctx.drawImage(defalutImage, 0, 0, videoWidth, videoHeight);
       await net.estimateSinglePose(canvas);
+      postMessage({
+        command: event.data.command,
+      });
+      break;
+    case "initFrame":
+      ctx.drawImage(defalutImage, 0, 0, videoWidth, videoHeight);
       postMessage({
         command: event.data.command,
       });
