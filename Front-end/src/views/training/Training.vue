@@ -138,7 +138,7 @@ export default {
         this.$store.state.poomsaeCurNo = old;
       } else {
         this.loadFlag = true;
-        this.seqNo = 0;
+        this.seqNo = 1;
         await this.loadPoseData();
         this.$refs.reference.play();
       }
@@ -153,7 +153,7 @@ export default {
 
       loadMsg: "Now Loading",
 
-      seqNo: 0,
+      seqNo: 1,
       poseData: [],
       seqData: [],
       score: 0,
@@ -162,6 +162,8 @@ export default {
       loadFlag: true,
       loopCount: 0,
       seconds: 0,
+
+      targetSimilarity: 0.02,
 
       correctSound: null,
       clearSound: null,
@@ -238,11 +240,10 @@ export default {
               const similarity = ps.poseSimilarity(
                 this.poseData[checkpoint],
                 event.data.pose,
-                { strategy: "cosineDistance" }
+                { strategy: "weightedDistance" }
               );
 
-              if (similarity < 0.2) {
-                console.log("중간단계 통과");
+              if (similarity < 0.1) {
                 this.seqData[this.seqNo].check.shift();
               }
             } else {
@@ -251,22 +252,41 @@ export default {
               const similarity = ps.poseSimilarity(
                 this.poseData[endpoint],
                 event.data.pose,
-                { strategy: "weightedDistance" }
+                {
+                  customWeight: {
+                    mode: "multiply",
+                    scores: {
+                      nose: 0,
+                      leftEye: 0,
+                      rightEye: 0,
+                      leftEar: 0,
+                      rightEar: 0
+                    }
+                  }
+                }
               );
 
-              if (similarity < 0.05) {
-                console.log(similarity);
+              if (similarity < this.targetSimilarity) {
                 this.score++;
+              } else if (similarity > this.targetSimilarity * 2) {
+                this.score--;
+                if (this.score < 0) {
+                  this.score = 0;
+                }
               }
 
-              if (this.score >= 50) {
+              if (this.targetSimilarity < 0.05) {
+                this.targetSimilarity += 0.001;
+              }
+
+              if (this.score >= 20) {
+                this.targetSimilarity = 0.02;
                 this.score = 0;
                 this.seqNo++;
 
                 if (this.seqNo === this.seqData.length) {
                   this.endFlag = true;
                   this.clearSound.play();
-                  break;
                 } else {
                   this.passFlag = true;
                   this.correctSound.play();
