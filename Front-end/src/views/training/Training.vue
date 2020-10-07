@@ -255,7 +255,7 @@ export default {
                   break;
                 } else {
                   this.loadFlag = true;
-                  this.$refs.reference.src = `/${this.poomsaeCurNo}jang/[SHANA]video${this.seqNo}.mp4`;
+                  this.$refs.reference.src = `/${this.poomsaeCurNo}jang/pose${this.seqNo}.mp4`;
                   this.$refs.reference.play();
                 }
               }
@@ -341,7 +341,7 @@ export default {
       this.poseData = await response[0].json();
       this.seqData = await response[1].json();
 
-      this.$refs.reference.src = `/${this.poomsaeCurNo}jang/[SHANA]video1.mp4`;
+      this.$refs.reference.src = `/${this.poomsaeCurNo}jang/pose1.mp4`;
     },
     drawFrame() {
       createImageBitmap(this.video).then(imageBitmap => {
