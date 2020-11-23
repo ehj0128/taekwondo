@@ -17,7 +17,6 @@
             @click="$store.state.poomsaeCurNo = i + 1"
             style="outline:none"
           >
-            <!-- <v-btn active-class="no-active" text @click="$store.state.poomsaeCurNo=i+1; $router.push({name: 'Training'}); console.log('뭐야');" style="outline:none"> -->
             <v-img
               v-if="$store.state.poomsaeCurNo == i + 1"
               height="50px"
