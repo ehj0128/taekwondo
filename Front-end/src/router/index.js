@@ -41,7 +41,7 @@ const routes = [
     component: Training,
   },
   {
-    path: "/introuduction",
+    path: "/introduction",
     name: "Introduction",
     component: Introduction,
   },

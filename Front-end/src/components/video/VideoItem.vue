@@ -41,8 +41,11 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn text color="deep-purple accent-4" @click="tryTraining()">
-        <h3 v-if="video.id > 1 && video.id < 10">실습하기</h3>
+      <v-btn v-if="incoming" text color="deep-purple accent-4" @click="tryTraining()">
+        <h3>실습하기</h3>
+      </v-btn>
+      <v-btn v-else text color="deep-purple accent-4" @click="tryTraining()">
+        <!-- <h3 v-if="video.id > 1 && video.id < 10">실습하기</h3> -->
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -59,7 +62,7 @@ export default {
   },
   methods: {
     tryTraining() {
-      if (this.now >= 3) {
+      if (this.now >= 3 || this.now === 0) {
         alert("해당 실습은 준비 중 입니다.");
       } else {
         this.$store.state.poomsaeCurNo = this.now;
