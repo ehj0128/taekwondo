@@ -92,8 +92,8 @@ export default {
         case "official":
           return window.open("https://www.koreataekwondo.co.kr/", "_blank");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

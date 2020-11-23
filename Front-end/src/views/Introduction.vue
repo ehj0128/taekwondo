@@ -71,7 +71,7 @@ export default {
     Intro,
     History,
     Category,
-    Technique,
+    Technique
   },
   data() {
     return {
@@ -79,30 +79,30 @@ export default {
         {
           title: "소개",
           imgPath: require("./../assets/class-img/img-class1.png"),
-          imgPath2: require("./../assets/class-img/img-class1-a.png"),
+          imgPath2: require("./../assets/class-img/img-class1-a.png")
         },
         {
           title: "역사",
           imgPath: require("./../assets/class-img/img-class2.png"),
-          imgPath2: require("./../assets/class-img/img-class2-a.png"),
+          imgPath2: require("./../assets/class-img/img-class2-a.png")
         },
         {
           title: "기술 체계",
           imgPath: require("./../assets/class-img/img-class3.png"),
-          imgPath2: require("./../assets/class-img/img-class3-a.png"),
+          imgPath2: require("./../assets/class-img/img-class3-a.png")
         },
         {
           title: "용어 사전",
           imgPath: require("./../assets/class-img/img-class4.png"),
-          imgPath2: require("./../assets/class-img/img-class4-a.png"),
-        },
+          imgPath2: require("./../assets/class-img/img-class4-a.png")
+        }
       ],
       model: 0,
       length: 4,
       Window: 0,
-      toggle_exclusive: undefined,
+      toggle_exclusive: undefined
     };
-  },
+  }
 };
 </script>
 

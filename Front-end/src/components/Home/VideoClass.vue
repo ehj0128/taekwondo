@@ -17,7 +17,6 @@
       allowfullscreen
     ></iframe>
 
-
     <iframe
       width="240"
       src="https://www.youtube.com/embed/4WTADD73ddk"
@@ -25,7 +24,6 @@
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
     ></iframe>
-
 
     <iframe
       width="240"
@@ -38,12 +36,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
-  name:"VideoClass",
+  name: "VideoClass"
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -41,7 +41,12 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn v-if="incoming" text color="deep-purple accent-4" @click="tryTraining()">
+      <v-btn
+        v-if="incoming"
+        text
+        color="deep-purple accent-4"
+        @click="tryTraining()"
+      >
         <h3>실습하기</h3>
       </v-btn>
       <v-btn v-else text color="deep-purple accent-4" @click="tryTraining()">
@@ -79,5 +84,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

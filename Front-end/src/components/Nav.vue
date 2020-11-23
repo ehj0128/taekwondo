@@ -3,13 +3,15 @@
     <v-container style="width: 63rem;">
       <v-row>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text @click="checkHome"><v-img width="30" src="@/assets/nav_logo.png"></v-img></v-btn>
+        <v-btn cols="1" text @click="checkHome"
+          ><v-img width="30" src="@/assets/nav_logo.png"></v-img
+        ></v-btn>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text @click="checkIntroduction">태권도란</v-btn>
+        <v-btn cols="1" text @click="checkIntroduction">태권도란</v-btn>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text @click="checkVideoList">영상교육</v-btn>
+        <v-btn cols="1" text @click="checkVideoList">영상교육</v-btn>
         <v-spacer></v-spacer>
-        <v-btn cols=1 text @click="checkTraining">실습</v-btn>
+        <v-btn cols="1" text @click="checkTraining">실습</v-btn>
         <v-spacer></v-spacer>
       </v-row>
     </v-container>
@@ -19,29 +21,28 @@
 export default {
   name: "Nav",
   methods: {
-    checkHome () {
-      if (this.$router.history.current.path !== '/') {
-        this.$router.push({name: 'Home'})
+    checkHome() {
+      if (this.$router.history.current.path !== "/") {
+        this.$router.push({ name: "Home" });
       }
     },
-    checkIntroduction () {
-      if (this.$router.history.current.path !== '/introduction') {
-        this.$router.push({name: 'Introduction'})
+    checkIntroduction() {
+      if (this.$router.history.current.path !== "/introduction") {
+        this.$router.push({ name: "Introduction" });
       }
     },
-    checkVideoList () {
-      if (this.$router.history.current.path !== '/videolist') {
-        this.$router.push({name: 'VideoList'})
+    checkVideoList() {
+      if (this.$router.history.current.path !== "/videolist") {
+        this.$router.push({ name: "VideoList" });
       }
     },
-    checkTraining () {
-      if (this.$router.history.current.path !== '/training') {
-        this.$router.push({name: 'Training'})
+    checkTraining() {
+      if (this.$router.history.current.path !== "/training") {
+        this.$router.push({ name: "Training" });
       }
-    },
+    }
   }
 };
 </script>
 
-<style>
-</style>
+<style></style>

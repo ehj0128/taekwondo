@@ -67,7 +67,7 @@
 
 <script>
 export default {
-  name: "Technique",
+  name: "Technique"
 };
 </script>
 

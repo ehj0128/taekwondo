@@ -57,57 +57,57 @@ export default {
           id: 1,
           name: "태극 1장",
           imgPath: require("./../../assets/class-img/img-class2.png"),
-          imgPath2: require("./../../assets/class-img/img-class2-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class2-a.png")
         },
         {
           id: 2,
           name: "태극 2장",
           imgPath: require("./../../assets/class-img/img-class3.png"),
-          imgPath2: require("./../../assets/class-img/img-class3-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class3-a.png")
         },
         {
           id: 3,
           name: "태극 3장",
           imgPath: require("./../../assets/class-img/img-class4.png"),
-          imgPath2: require("./../../assets/class-img/img-class4-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class4-a.png")
         },
         {
           id: 4,
           name: "태극 4장",
           imgPath: require("./../../assets/class-img/img-class5.png"),
-          imgPath2: require("./../../assets/class-img/img-class5-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class5-a.png")
         },
         {
           id: 5,
           name: "태극 5장",
           imgPath: require("./../../assets/class-img/img-class6.png"),
-          imgPath2: require("./../../assets/class-img/img-class6-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class6-a.png")
         },
         {
           id: 6,
           name: "태극 6장",
           imgPath: require("./../../assets/class-img/img-class7.png"),
-          imgPath2: require("./../../assets/class-img/img-class7-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class7-a.png")
         },
         {
           id: 7,
           name: "태극 7장",
           imgPath: require("./../../assets/class-img/img-class8.png"),
-          imgPath2: require("./../../assets/class-img/img-class8-a.png"),
+          imgPath2: require("./../../assets/class-img/img-class8-a.png")
         },
         {
           id: 8,
           name: "태극 8장",
           imgPath: require("./../../assets/class-img/img-class9.png"),
-          imgPath2: require("./../../assets/class-img/img-class9-a.png"),
-        }, 
+          imgPath2: require("./../../assets/class-img/img-class9-a.png")
+        }
       ],
-      toggle_exclusive: undefined,
+      toggle_exclusive: undefined
     };
   },
   computed: {
-    ...mapState(["poomsaeCurNo"]),
-  },
+    ...mapState(["poomsaeCurNo"])
+  }
 };
 </script>
 
