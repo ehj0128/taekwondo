@@ -25,11 +25,15 @@
 - Nginx
 - letsencrypt
 
+##### AI Library
+
+- Posenet
+
 ##### Depoly
 
 - netlify
 
-#### 주요 구현 내용 Best 5
+### 주요 구현 내용
 
 1. 태권도와 관련된 간단한 이론 학습 가능
 2. 태권도 품새 별 Youtube영상 시청 가능
@@ -37,3 +41,6 @@
 4. Posenet을 이용해 사용자의 움직임과 저장되어 있는 영상의 움직임을 비교
 5. 품새 실습 가능
 
+### 홈페이지
+
+- https://youthful-ramanujan-4bb822.netlify.app/
